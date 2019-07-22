@@ -1,0 +1,204 @@
+\documentclass[spanish, fleqn]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+%\usepackage{fancyhdr}
+%\usepackage{lipsum}
+%\usepackage{enumerate}
+%\usepackage{multicol}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+\usepackage{xcolor}
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{ mathrsfs }
+\usepackage{wrapfig}
+\usepackage{enumitem}
+\usepackage{ dsfont }
+\usepackage{afterpage}
+
+\usepackage{tikz} %% Grafos
+\usepackage{fancyhdr} %% Para las cosas en las esquinas de cada pagina
+
+\usepackage[a4paper,bindingoffset=0.0in,left=0.60in,right=0.70in,top=0.7in,bottom=0.7in,footskip=.25in]{geometry}
+
+\newcommand\tab[1][0.5cm]{\hspace*{#1}}
+\newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+
+\newcommand{\cero}{0}
+\newcommand{\sumMayorIgual}[2][\cero]{\sum_{n\geq#1}{#2}}
+
+\newcommand{\eclosure}[1]{\epsilon\text{-closure}(\{#1\})}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+    
+\definecolor{bggray}{rgb}{0.95,0.95,0.95}
+\lstdefinestyle{mypy}{
+  language=python,
+  backgroundcolor=\color{bggray},
+  basicstyle=\ttfamily\small\color{orange!70!black},
+  frame=L,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{red},
+  numbers=left,
+  showstringspaces=false,
+  xrightmargin=5pt,
+  xleftmargin=10pt
+}
+\lstdefinestyle{myC}{
+  language=C,
+  backgroundcolor=\color{bggray},
+  basicstyle=\ttfamily\small\color{orange!70!black},
+  frame=L,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{red},
+  numbers=left,
+  showstringspaces=false,
+  xrightmargin=5pt,
+  xleftmargin=10pt
+}
+\renewcommand{\lstlistingname}{Código}   
+    
+
+\newcommand{\ramo}{INF-155: Algoritmos y complejidad}
+\newcommand{\numeroTarea}{4}
+\newcommand{\nombreTarea}{\textit{Slicing through the 90s}}
+
+\newcommand{\xstar}{x^\star}
+
+\begin{document}
+
+\lstset
+{
+    language=[LaTeX]TeX,
+    breaklines=false,
+    basicstyle=\tt\scriptsize,
+    keywordstyle=\color{blue},
+    identifierstyle=\color{magenta},
+}
+
+\title{\ramo \\
+Tarea \#\numeroTarea\\
+\nombreTarea
+}
+\author{\href{mailto:anghelo.carvajal.14@gmail.com}{Anghelo Carvajal} \\ 201473062-4
+}
+
+\maketitle
+
+\pagenumbering{gobble} %% Desactiva la numeracion de paginas
+
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Tarea \numeroTarea: \nombreTarea}
+
+\chead{\ramo} % 
+
+%% \rhead{\rightmark} % 
+%% \rhead{Pregunta \thesection}
+
+\lfoot{\LaTeXe}
+
+%% \cfoot{} %
+
+\rfoot{Página \thepage}
+
+%  \thepage
+% adds number of the current page.
+%  \thechapter
+% adds number of the current chapter.
+%  \thesection
+% adds number of the current section.
+%  \chaptername
+% adds the word "Chapter" in English or its equivalent in the current language.
+%  \leftmark
+% adds name and number of the current top-level structure (for example, Chapter for reports and books classes; Section for articles ) in uppercase letters.
+%  \rightmark
+% adds name and number of the current next to top-level structure (Section for reports and books; Subsection for articles) in uppercase letters.
+
+\newpage
+
+%% \section{Section}
+
+\pagenumbering{arabic} %% Activa numeracion de paginas
+
+\section{Pregunta 1}
+
+Describa informal (pero claramente) un algoritmo \textbf{voraz} para resolver este problema. Considere que siempre habrá mas de un edificio ($n > 1$) y que el costo máximo de un ``\textit{buen slice}'' es siempre mayor o igual al número de edificios ($k \geq n$). Debe dejar bien claro los pasos y decisiones que realiza su algoritmo, puede apoyarse en diagramas y demases que quepan en su informe.
+
+\subsection{Respuesta 1}
+
+\begin{enumerate}
+    \item El algoritmo empezaría a \textit{nivel de piso}.
+    
+    \item Revisa si, en la \texttt{altura} en la que se encuentra, todos los edificios tienen la misma altura.
+    
+    \begin{enumerate}
+        \item Si se cumple, subir a la siguiente \texttt{altura} y repetir el paso.
+        
+        \item Si no, ir al siguiente paso.
+    \end{enumerate}
+    
+    \item Tomar los \texttt{pisos} de la \texttt{altura} actual (\texttt{$h_i$}) y considerarlos para el \textit{slice}, dejándolos en un \texttt{acumulado}. Luego entramos a un ciclo:
+    
+    \begin{enumerate}
+        \item Entramos a la siguiente \texttt{altura}.
+        
+        \item Contamos la cantidad de \texttt{pisos} de dicha \texttt{altura}.
+        
+        \begin{enumerate}
+            \item Si dicha cantidad mas la cantidad en \texttt{acumulado} no supera \texttt{$k$}, entonces agregamos estos \texttt{pisos} a \texttt{acumulado} y repetimos este ciclo (vamos a $3.a$).
+            
+            \item En caso contrario, nos devolvemos a la ultima \texttt{altura} que agregamos a nuestro \texttt{acumulado} y luego salimos del ciclo (vamos a $4$).
+        \end{enumerate}
+        
+    \end{enumerate}
+    
+    \item Lo que tengamos en \texttt{acumulado} sera uno de nuestros \textit{slices}, guardándolo en \texttt{total}.
+    
+    \item Si queda mas \texttt{altura} por revisar, nos movemos a la siguiente altura y nos vamos al paso $3$.
+    
+    \item Si ya no queda mas altura, nuestros \texttt{slices} se encontraran en la pila LIFO \texttt{total}.
+\end{enumerate}
+
+En otras palabras, nuestro algoritmo va desde abajo hacia arriba, tomando la mayor cantidad de pisos por \texttt{slice} posible, siempre completando una cantidad entera de alturas.
+
+\section{Pregunta 2}
+
+Demuestre formalmente que su algoritmo encuentra el número mínimo de ``\textit{buenos slices}'', es decir un óptimo global. En caso de suceder, describa las restricciones y acotaciones para las cuales su algoritmo es óptimo, y describa las modificaciones para hacer su algoritmo óptimo para toda posible instancia del problema.
+
+\subsection{Respuesta 2}
+
+Para demostrar lo pedido, debemos demostrar lo siguiente:
+
+\begin{enumerate}
+    \item \textit{Greedy choice property}
+    
+    \tab Supongamos que existe una solución óptima $\Pi_{h}^{\star}$, la cual el primer \textit{slice} no es el de mayor cantidad de pisos $m$, entonces posee un subconjunto de \textit{slice}s que poseen una cantidad de pisos $m$, si reemplazamos esos \textit{slice}s tendríamos una solución aun mejor, pero $\Pi_{h}^{\star}$ ya era óptima, por lo cual llegamos a una contradicción.
+    
+    \item \textit{Inductive Substructure}
+    
+    \tab Al elegir los $m$ pisos para el \texttt{slice} $i$, resulta el subproblema $P_{h-m}$ para cortar los $h-m$ pisos restantes.
+    El conjunto $\Pi_{h-m} \cup \{i\}$ es solución factible para $P_h$, ya que cortan a los edificios de la forma deseada y no hay restricciones externas al resolver $P_{h-m}$.
+    
+    \item \textit{Optimal Substructure}
+    
+    \tab Debemos demostrar que $\Pi_{h} = \Pi_{h-m} \cup \{i\}$ es una solucion optima. Es decir, no se puede resolver el problema con menos \texttt{slice}s que $|\Pi_{h-m}| + 1$.
+    
+    \tab Por demostración al absurdo, supongamos que podemos reemplazar el subconjunto $\Pi_{h-m}$ por otro que contenga una cantidad menor de \textit{slice}s.
+    
+    Haciendo este cambio, la cantidad de \textit{slice}s de $P_h$ seria $|\Pi_{h-m}|$. Pero por lo demostrado en \textit{Greedy choice}, existe una solución igual de óptima que tiene la tiene el \textit{slice} $i$, por lo tanto, si sacamos este \textit{slice} tendríamos una solución para $P_{h-m}$ que requeriría $|\Pi_{h-m}| - 1$ \textit{slices}, por lo cual $\Pi_{h-m}$ no seria la solución óptima, por lo cual llegamos a una contradicción.
+
+\end{enumerate}
+
+\end{document}

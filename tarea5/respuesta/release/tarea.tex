@@ -1,0 +1,250 @@
+\documentclass[spanish, fleqn]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+%\usepackage{fancyhdr}
+%\usepackage{lipsum}
+%\usepackage{enumerate}
+%\usepackage{multicol}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+\usepackage{xcolor}
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{ mathrsfs }
+\usepackage{wrapfig}
+\usepackage{enumitem}
+\usepackage{ dsfont }
+\usepackage{afterpage}
+
+\usepackage{tikz} %% Grafos
+\usepackage{fancyhdr} %% Para las cosas en las esquinas de cada pagina
+
+\usepackage[a4paper,bindingoffset=0.0in,left=0.60in,right=0.70in,top=0.7in,bottom=0.7in,footskip=.25in]{geometry}
+
+\newcommand\tab[1][0.5cm]{\hspace*{#1}}
+\newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+
+\newcommand{\cero}{0}
+\newcommand{\sumMayorIgual}[2][\cero]{\sum_{n\geq#1}{#2}}
+
+\newcommand{\eclosure}[1]{\epsilon\text{-closure}(\{#1\})}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+    
+\definecolor{bggray}{rgb}{0.95,0.95,0.95}
+\lstdefinestyle{mypy}{
+  language=python,
+  backgroundcolor=\color{bggray},
+  basicstyle=\ttfamily\small\color{orange!70!black},
+  frame=L,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{red},
+  numbers=left,
+  showstringspaces=false,
+  xrightmargin=5pt,
+  xleftmargin=10pt
+}
+\lstdefinestyle{myC}{
+  language=C,
+  backgroundcolor=\color{bggray},
+  basicstyle=\ttfamily\small\color{orange!70!black},
+  frame=L,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{red},
+  numbers=left,
+  showstringspaces=false,
+  xrightmargin=5pt,
+  xleftmargin=10pt
+}
+\renewcommand{\lstlistingname}{Código}   
+    
+
+\newcommand{\ramo}{INF-155: Algoritmos y complejidad}
+\newcommand{\numeroTarea}{5}
+\newcommand{\nombreTarea}{\textit{Dilema}}
+
+\newcommand{\xstar}{x^\star}
+
+\begin{document}
+
+\lstset
+{
+    language=[LaTeX]TeX,
+    breaklines=false,
+    basicstyle=\tt\scriptsize,
+    keywordstyle=\color{blue},
+    identifierstyle=\color{magenta},
+}
+
+\title{\ramo \\
+Tarea \#\numeroTarea\\
+\nombreTarea
+}
+\author{\href{mailto:anghelo.carvajal.14@gmail.com}{Anghelo Carvajal} \\ 201473062-4
+}
+
+\maketitle
+
+\pagenumbering{gobble} %% Desactiva la numeracion de paginas
+
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Tarea \numeroTarea: \nombreTarea}
+
+\chead{\ramo} % 
+
+%% \rhead{\rightmark} % 
+\rhead{Pregunta \thesection}
+
+\lfoot{\LaTeXe}
+
+%% \cfoot{} %
+
+\rfoot{Página \thepage}
+
+%  \thepage
+% adds number of the current page.
+%  \thechapter
+% adds number of the current chapter.
+%  \thesection
+% adds number of the current section.
+%  \chaptername
+% adds the word "Chapter" in English or its equivalent in the current language.
+%  \leftmark
+% adds name and number of the current top-level structure (for example, Chapter for reports and books classes; Section for articles ) in uppercase letters.
+%  \rightmark
+% adds name and number of the current next to top-level structure (Section for reports and books; Subsection for articles) in uppercase letters.
+
+\newpage
+
+%% \section{Section}
+
+\pagenumbering{arabic} %% Activa numeracion de paginas
+
+Carina, John y Rodrigo tienen $n$ kilogramos de dulces ácidos que les obsequió el malvado doctor Von Brand. Ellos
+quieren repartirse el botín, pero como son personajes muy especiales quieren repartírselo en porciones de cierto
+peso que cumplan con ciertas condiciones:
+
+\begin{itemize}
+    \item Carina solo quiere porciones que pesen $a$ kilos, John quiere varias porciones de $b$ kilos y Rodrigo solo aceptará porciones que tengan $c$ kilos.
+    \item Por supuesto, siendo una tarea de algoritmos, no quieren desperdiciar dulce alguno (El doctor siempre les dará una cantidad valida que puedan repartirse según sus condiciones) y maximizar la cantidad de porciones que cumplan con los pesos indicados.
+\end{itemize}
+
+
+
+
+\section{Pregunta 1}
+Proponga y programe un algoritmo de \textbf{fuerza bruta} para resolver este problema. 
+
+\subsection{Respuesta 1}
+
+Un posible algoritmo para solucionar este dilema, seria probando todos los casos posibles, de forma recursiva.
+
+El algoritmo vería que pasaría si repartimos una porción de $a$ kilos, otra de $b$ kilos y otra de $c$ kilos, quedando con 3 subproblemas (repartir $n-a$, $n-b$ y $n-c$ kilos), y de estos 3 subproblemas,  nos quedamos con el que nos entregue la mayor cantidad de porciones.
+
+Estos 3 subproblemas se plantearían como 3 llamados recursivos, de modo que llamaríamos a la función y le sumaríamos 1 al resultado, luego nos quedamos con el mayor de estos 3.
+
+Lógicamente, no podemos repartir, por ejemplo, $a$ kilos si tenemos $n < a$ kilos a repartir. Para este caso especial diremos que se entregaron $-\infty$ porciones, de modo que este camino se ignoraría completamente.
+
+Todo lo explicado anteriormente se puede expresar en forma de una función matemática de la siguiente manera:
+\[   
+\phi(n, a, b, c) = 
+    \begin{cases}
+        0 & \quad \text{; } n \leq 0\\
+        max 
+            \begin{cases}
+                \begin{cases}
+                    1 + \phi(n-a, a, b, c) & \quad \text{; } n-a \geq 0 \\
+                    -\infty & \quad \text{; caso contrario}
+                \end{cases}\\
+                \begin{cases}
+                    1 + \phi(n-b, a, b, c) & \quad \text{; } n-b \geq 0 \\
+                    -\infty & \quad \text{; caso contrario}
+                \end{cases}\\
+                \begin{cases}
+                    1+ \phi(n-c, a, b, c) & \quad \text{; } n-c \geq 0 \\
+                    -\infty & \quad \text{; caso contrario}
+                \end{cases}
+           \end{cases}
+        & \quad \text{; }n > 0\\
+     \end{cases}
+\]
+
+La implementación en \texttt{C} del algoritmo anterior es:
+
+\lstinputlisting[
+    style=myC,
+    caption=\texttt{tarea-5-1.c}
+    ] {src/tarea-5-1.c}
+
+\section{Pregunta 2}
+
+Proponga y programe un algoritmo de \textbf{programación dinámica} para resolver este problema. 
+
+\subsection{Respuesta 2}
+
+Es notorio que muchos de los cálculos realizados por el algoritmo anterior se repiten muchas veces, por lo cual nos aprovecharemos de eso. 
+
+Todos estos cálculos los realizaremos desde el cero hasta $n$ (y no desde $n$ hasta cero como en el algoritmo anterior), almacenando cada resultado. Por ende, cada vez que necesitemos realizar un calculo en base a resultados anteriores, podremos acceder a ellos de forma rápida, sin tener que calcularlos de nuevo.
+
+Esto lo implementaríamos con un arreglo que contendría $n+1$ posiciones. Cada elemento con posición $k$ del arreglo contendría como repartir de mejor manera $k$ kilos de dulces, de modo que la posición $n$ del arreglo contendría como repartir los $n$ kilos.
+
+El algoritmo optimizado implementado en \texttt{C} seria:
+
+\lstinputlisting[
+    style=myC,
+    caption=\texttt{tarea-5-2.c}
+    ] {src/tarea-5-2.c}
+
+\section{Pregunta 3}
+
+Haga una comparación superficial del rendimiento empírico de sus programas, muestre sus resultados y explique brevemente por qué cree que está obteniendo mejor rendimiento en uno u otro. Se evaluará lo creíble y honesta de su explicación
+
+\subsection{Respuesta 3}
+
+Para la comparación superficial, se usaron los input \texttt{50 2 3 5}, \texttt{60 2 3 5},  \texttt{65 2 3 5} y \texttt{70 2 3 5}. 
+
+Ambos programas entregaron los mismos resultados, pero tuvieron tiempos de ejecución distintos.
+
+En la siguiente tabla se pueden ver los tiempos correspondientes:
+
+\begin{table}
+
+    \centering
+    \begin{tabular}{r|c|c}
+        \hline
+        \texttt{input} & Fuerza bruta & Programación dinámica \\
+        \hline
+        \texttt{50 2 3 5} & 0m0.464s & 0m0.006s \\
+        \texttt{60 2 3 5} & 0m16.490s & 0m0.007s \\
+        \texttt{65 2 3 5} & 1m38.700s & 0m0.007s \\
+        \texttt{70 2 3 5} & 9m57.489s & 0m0.010s \\
+        \hline
+    \end{tabular}
+    \caption{Comparación en los tiempos de ejecución entre algoritmos}
+    
+\end{table}
+
+Los tiempos fueron medidos con el programa \texttt{time} de linux.
+
+Como se puede apreciar, el tiempo de ejecución explota con el algoritmo que usa fuerza bruta, mientras que el algoritmo que usa programación dinámica se mantenían todos pequeños y casi iguales.
+
+El algoritmo de fuerza bruta toma muchísimo mas tiempo que el algoritmo de programación dinámica, debido a que para cada calculo que se quiera realizar se debe recalcular todos los otros números necesarios de forma recursiva, haciendo 3 llamados recursivos por cada cálculo, y cada uno de esos cálculos hará 3 llamados recursivos y así sucesivamente, haciendo que tome un tiempo demasiado grande.
+
+En contraparte, el algoritmo de programación dinámica es simplemente llenar un arreglo de forma lineal, lo cual tiene baja complejidad y es muchísimo mas rápido, además de que los cálculos necesarios en cada iteración ya existen y es fácil acceder a ellos, no hay que recalcularlos cada vez.
+
+
+
+
+\end{document}

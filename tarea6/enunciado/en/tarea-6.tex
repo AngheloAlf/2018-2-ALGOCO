@@ -1,0 +1,132 @@
+\documentclass[english, spanish, fleqn]{article}
+\usepackage{fourier}
+\usepackage{babel}
+\usepackage{amsmath}
+\usepackage[ruled, noline]{algorithm2e}
+\usepackage{csquotes}
+\usepackage[utf8]{inputenc}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+
+\newcommand{\num}{6}
+
+%%%
+%%% For algorithm2e
+%%%
+
+\SetAlgorithmName{Algoritmo}{Algoritmo}{Índice de algoritmos}
+
+\SetAlCapSty{mdseries}
+\SetKwProg{Function}{function}{}{end}
+\SetKwProg{Procedure}{procedure}{}{end}
+\SetKw{Variables}{variables}
+\SetKw{Downto}{downto}
+\SetKwBlock{Loop}{loop}{end}
+\SetKw{Continue}{continue}
+\SetKw{Break}{break}
+\SetKw{KwStep}{step}
+
+\title{Algoritmos y Complejidad\\
+       Tarea \#\num \\
+       ``Amortizando\ldots''}
+\author{Algorithm Knaves}
+\date{26 de noviembre de 2018}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+  En clase vimos un contador binario que se incrementaba.
+  El decrementar produce problemas,
+  hay que representar números negativos también.
+  Para manejar decrementos en forma eficiente,
+  usamos \textquote{bits} que pueden tomar los valores \(-1, 0, 1\)
+  (no solo \(0, 1\)).
+  Almacenamos el contador en un arreglo \(a[k]\),
+  y \(m\) es el último \textquote{bit} no cero
+  (si todos son cero, definimos \(m = -1\)).
+  El valor del contador es:
+  \begin{equation*}
+    \operatorname{val}(a, m)
+      = \sum_{0 \le i \le m} a[i] \cdot 2^i
+  \end{equation*}
+  Note que \(\operatorname{val}(a, m) = 0\) si y solo si \(m = -1\).
+  \IncMargin{3em}%
+  \begin{algorithm}[ht]
+    \DontPrintSemicolon
+
+    \Procedure{\(\operatorname{inc}\)(\(a, m\))}{
+      \eIf{\(m = -1\)}{
+	\(a[0] \leftarrow 1\) \;
+	\(m \leftarrow 0\) \;
+      }{
+	\(i \leftarrow 0\) \;
+	\While{\(a[i] = 1\)}{
+	  \(a[i] \leftarrow 0\) \;
+	  \(i \leftarrow i + 1\) \;
+	}
+	\(a[i] \leftarrow a[i] + 1\) \;
+	\eIf{\(a[i] = 0 \wedge m = i\)}{
+	  \(m \leftarrow - 1\) \;
+	}{
+	  \(m \leftarrow \operatorname{max}(m, i)\) \;
+	}
+      }
+    }
+    \caption{Incrementar el contador}
+    \label{alg:counter-inc}
+  \end{algorithm}%
+  \DecMargin{3em}
+  \IncMargin{3em}%
+  \begin{algorithm}[ht]
+    \DontPrintSemicolon
+
+    \Procedure{\(\operatorname{dec}\)(\(a, m\))}{
+      \eIf{\(m = -1\)}{
+	\(a[0] \leftarrow -1\) \;
+	\(m \leftarrow 0\) \;
+      }{
+	\(i \leftarrow 0\) \;
+	\While{\(a[i] = -1\)}{
+	  \(a[i] \leftarrow 0\) \;
+	  \(i \leftarrow i + 1\) \;
+	}
+	\(a[i] \leftarrow a[i] - 1\) \;
+	\eIf{\(a[i] = 0 \wedge m = i\)}{
+	  \(m \leftarrow - 1\) \;
+	}{
+	  \(m \leftarrow \operatorname{max}(m, i)\) \;
+	}
+      }
+    }
+    \caption{Decrementar el contador}
+    \label{alg:counter-dec}
+  \end{algorithm}%
+  \DecMargin{3em}
+  \begin{enumerate}
+  \item % 20182t5p1
+    Dé un ejemplo de dos representaciones diferentes de un número.
+    \\ \hspace*{\fill}(20 puntos)
+  \item % 20182t5p2
+    Demuestre que los procedimientos de los algoritmos~%
+    \ref{alg:counter-inc} y~\ref{alg:counter-dec}
+    son correctos.
+    \\ \hspace*{\fill}(30 puntos)
+  \item % 20182t5p3
+    Usando los procedimientos de los algoritmos~%
+    \ref{alg:counter-inc} y~\ref{alg:counter-dec}
+    para incrementar y decrementar
+    (suponemos largo infinito, \(k = \infty\), para simplificar),
+    demuestre que el costo amortizado de cada operación
+    en una secuencia de \(n\) incrementos y decrementos
+    sobre un contador inicialmente cero es \(O(1)\).
+    \\ \hspace*{\fill}(50 puntos)
+  \end{enumerate}
+
+\input{condiciones}
+  \vfill\hfill LW/HvB/\LaTeXe
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

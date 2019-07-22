@@ -1,0 +1,186 @@
+\documentclass[spanish, fleqn]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+%\usepackage{fancyhdr}
+%\usepackage{lipsum}
+%\usepackage{enumerate}
+%\usepackage{multicol}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+\usepackage{xcolor}
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{ mathrsfs }
+\usepackage{wrapfig}
+\usepackage{enumitem}
+\usepackage{ dsfont }
+\usepackage{afterpage}
+
+\usepackage{tikz} %% Grafos
+\usepackage{fancyhdr} %% Para las cosas en las esquinas de cada pagina
+
+\usepackage[a4paper,bindingoffset=0.0in,left=0.60in,right=0.70in,top=0.7in,bottom=0.7in,footskip=.25in]{geometry}
+
+\newcommand\tab[1][0.5cm]{\hspace*{#1}}
+\newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+
+\newcommand{\cero}{0}
+\newcommand{\sumMayorIgual}[2][\cero]{\sum_{n\geq#1}{#2}}
+
+\newcommand{\eclosure}[1]{\epsilon\text{-closure}(\{#1\})}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+    
+\definecolor{bggray}{rgb}{0.95,0.95,0.95}
+\lstdefinestyle{mypy}{
+  language=python,
+  backgroundcolor=\color{bggray},
+  basicstyle=\ttfamily\small\color{orange!70!black},
+  frame=L,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{red},
+  numbers=left,
+  showstringspaces=false,
+  xrightmargin=5pt,
+  xleftmargin=10pt
+}
+\lstdefinestyle{myC}{
+  language=C,
+  backgroundcolor=\color{bggray},
+  basicstyle=\ttfamily\small\color{orange!70!black},
+  frame=L,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{red},
+  numbers=left,
+  showstringspaces=false,
+  xrightmargin=5pt,
+  xleftmargin=10pt
+}
+\renewcommand{\lstlistingname}{Código}   
+    
+
+\newcommand{\ramo}{INF-155: Algoritmos y complejidad}
+\newcommand{\numeroTarea}{6}
+\newcommand{\nombreTarea}{``Amortizando...''}
+
+\newcommand{\xstar}{x^\star}
+
+\begin{document}
+
+\lstset
+{
+    language=[LaTeX]TeX,
+    breaklines=false,
+    basicstyle=\tt\scriptsize,
+    keywordstyle=\color{blue},
+    identifierstyle=\color{magenta},
+}
+
+\title{\ramo \\
+Tarea \#\numeroTarea\\
+\nombreTarea
+}
+\author{\href{mailto:anghelo.carvajal.14@gmail.com}{Anghelo Carvajal} \\ 201473062-4
+}
+
+\maketitle
+
+\pagenumbering{gobble} %% Desactiva la numeracion de paginas
+
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Tarea \numeroTarea: \nombreTarea}
+
+\chead{\ramo} % 
+
+%% \rhead{\rightmark} % 
+%% \rhead{Pregunta \thesection}
+
+\lfoot{\LaTeXe}
+
+%% \cfoot{} %
+
+\rfoot{Página \thepage}
+
+%  \thepage
+% adds number of the current page.
+%  \thechapter
+% adds number of the current chapter.
+%  \thesection
+% adds number of the current section.
+%  \chaptername
+% adds the word "Chapter" in English or its equivalent in the current language.
+%  \leftmark
+% adds name and number of the current top-level structure (for example, Chapter for reports and books classes; Section for articles ) in uppercase letters.
+%  \rightmark
+% adds name and number of the current next to top-level structure (Section for reports and books; Subsection for articles) in uppercase letters.
+
+\newpage
+
+%% \section{Section}
+
+\pagenumbering{arabic} %% Activa numeracion de paginas
+
+
+En clase vimos un contador binario que se incrementaba. El decrementar produce problemas, hay que representar números negativos también. Para manejar decrementos en forma eficiente, usamos «bits» que pueden tomar los valores $\{-1, 0, 1\}$ (no solo $\{0, 1\}$). Almacenamos el contador en un arreglo $a[k]$, y $m$ es el último «bit» no cero (si todos son cero, definimos $m =-1$). El valor del contador es:
+
+\begin{align*}
+    val(a, m) &= \sum_{0\leq i \leq m} a[i] * 2^{i}
+\end{align*}
+
+Note que $val(a, m) = 0$ si y solo si $m =- 1$.
+
+\section{Pregunta 1}
+
+Dé un ejemplo de dos representaciones diferentes de un número.
+
+\subsection{Respuesta 1}
+
+Por ejemplo, para representar el número 9 podemos hacerlo de la forma \texttt{a[] = \{1, 0, 0, 1, 0, 0, 0\}}, donde \texttt{m = 3}, y además podemos expresarlo de la forma \texttt{a[] = \{-1, -1, 1, 1, 0, 0, 0\}}, donde \texttt{m = 3} también.
+
+
+\section{Pregunta 2}
+
+Demuestre que los procedimientos de los algoritmos 1 y 2 son correctos.
+
+\subsection{Respuesta 2}
+
+Primero que nada, analizaremos el algoritmo para incrementar.
+
+Sabemos que si \texttt{m == -1}, entonces todos los <bit> son 0, por ende, al incrementar habría que volver el primer bit de 0 a 1, y \textit{setear} el \texttt{m} como 0 para indicar esto, lo cual es realizado en el primer \texttt{if} del procedimiento.
+
+En el caso de que \texttt{m} sea mayor que -1, buscaremos desde el inicio todos los bits consecutivos que sean 1, con el objetivo de volverlos 0. Luego el bit siguiente habría que volverlo 1 si es que este bit es 0, o volverlo 0 si es que el bit es 1. Finalmente \textit{setear} el \texttt{m} como corresponda. Como podemos ver, el algoritmo realiza los pasos necesarios para aumentar el contador, e incluso tiene consideraciones con los negativos, revisando la posibilidad de que todos los números se vuelvan 0 \textit{seteando} el \texttt{m} a -1. Por lo que este algoritmo es correcto.
+
+Luego, notamos que el algoritmo para decrementar es el mismo que el anterior pero cambiando los $+1$ por $-1$, y como el algoritmo anterior ya es lo suficientemente general como para considerar tanto los positivos como los negativos, este algoritmo también esta correcto.
+
+
+\section{Pregunta 3}
+Usando los procedimientos de los algoritmos 1 y 2 para incrementar y decrementar (suponemos largo infinito, $k = \infty$, para simplificar), demuestre que el costo amortizado de cada operación en una secuencia de $n$ incrementos y decrementos sobre un contador inicialmente cero es $O(1)$.
+
+\subsection{Respuesta 3}
+
+Consideremos una secuencia de incrementos, y consideremos cuántas veces cambia cada bit. Si el contador llega a n (n operaciones) el bit más alto es $\lfloor log_{2}(n)\rfloor + 1$. Claramente, $a[0]$ cambia cada vez, $a[1]$ cambia cada dos incrementos, ... , $a[i]$ cambia cada $2^{i}$ incrementos, y así
+sucesivamente. El costo total de los cambios a $a[0]$ es $n$, los cambios a $a[1]$ tienen costo total $\lfloor n/2\rfloor$, ... , cambios de $a[i]$ cuestan $\lfloor n/2^i\rfloor$, y así sigue.
+
+\begin{align*}
+    n + \left\lfloor\frac{n}{2}\right\rfloor + \left\lfloor \frac{n}{2^2}\right\rfloor + \left\lfloor \frac{n}{2^3}\right\rfloor + ...   &= \sum_{i\geq0}{\left\lfloor \frac{n}{2^i
+    }\right\rfloor} \\
+    & \leq n * \sum_{i\geq0}{\frac{1}{2^i
+    }} \\
+    & \leq 2n
+\end{align*}
+
+Por ende, el costo amortizado es menor a 2, por lo tanto,  la complejidad es $O(1)$ (el 2 es una constante).
+
+\end{document}
