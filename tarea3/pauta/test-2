@@ -1,0 +1,56 @@
+#!/usr/bin/env bats
+
+@test "Not found" {
+   run ./20182t3p2 'x+glerb' match.c
+   [ "$status" -eq 0 ]
+   [ "${#lines[*]}" -eq 0 ]
+}
+
+@test "One '+' matching a single character" {
+   run ./20182t3p2 "Pi+ke's" match.c
+   [ "$status" -eq 0 ]
+   [ "${#lines[*]}" -eq 1 ]
+   [ "${lines[0]}" = " * @brief Pike's regexp match" ]
+}
+
+@test "Several '+' matches" {
+   run ./20182t3p2 '^cb+c$' testdata
+   [ "$status" -eq 0 ]
+   [ "${#lines[*]}" -eq 2 ]
+}
+
+@test "Several '+' in a regexp" {
+   run ./20182t3p2 '^ca+b+c$' testdata
+   [ "$status" -eq 0 ]
+   [ "${#lines[*]}" -eq 2 ]
+}
+
+@test "Mix '*' and '+' in a regexp" {
+   run ./20182t3p2 '^ca*b+c$' testdata
+   [ "$status" -eq 0 ]
+   [ "${#lines[*]}" -eq 4 ]
+}
+
+@test "End line anchor, one char plussed" {
+   run ./20182t3p2 'a+$' testdata
+   [ "$status" -eq 0 ]
+   [ "${#lines[*]}" -eq 5 ]
+}
+
+@test "Plussed dot" {
+   run ./20182t3p2 'A .+ garbage' testdata
+   [ "$status" -eq 0 ]
+   [ "${#lines[*]}" -eq 3 ]
+}
+
+@test "Plussed dot matching several" {
+   run ./20182t3p2 '^.+garbage' testdata
+   [ "$status" -eq 0 ]
+   [ "${#lines[*]}" -eq 3 ]
+}
+
+@test "Line with dots" {
+   run ./20182t3p2 'line.+' testdata
+   [ "$status" -eq 0 ]
+   [ "${#lines[*]}" -eq 3 ]
+}

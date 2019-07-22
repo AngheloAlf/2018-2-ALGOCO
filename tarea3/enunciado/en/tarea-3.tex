@@ -1,0 +1,93 @@
+\documentclass[english, spanish, fleqn]{article}
+\usepackage{fourier}
+\usepackage{babel}
+\usepackage{minted}
+\usepackage[utf8]{inputenc}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+
+\newcommand{\num}{3}
+
+\title{Algoritmos y Complejidad\\
+       Tarea \#\num \\
+       ``Recursion is beautiful''}
+\author{Algorithm Knaves}
+\date{15 de octubre de 2018}
+
+\begin{document}
+\maketitle
+\thispagestyle{empty}
+
+  Un hermoso ejemplo de recursión
+  es el programita de Pike para reconocer
+  una versión recortada de expresiones regulares.
+  Vea la
+    \href{https://www.cs.princeton.edu/courses/archive/spr09/cos333/beautiful.html}{explicación}
+  de Kernighan para detalles.
+  Reconoce solo las siguientes construcciones:
+
+  \begin{tabular}[h]{cl}
+    c                      & Calza el caracter 'c'
+                             (salvo los especiales a continuación) \\
+    .                      & Calza cualquier caracter \\
+    \textasciicircum       & Calza el comienzo
+                             del \emph{\foreignlanguage{english}{string}} \\
+    \$                     & Calza el final
+                             del \emph{\foreignlanguage{english}{string}} \\
+    \textasteriskcentered  & Cero o más ocurrencias del caracter anterior
+  \end{tabular}
+
+  El programa es el del listado~\ref{lst:20182t3}.
+  \begin{listing}
+    \inputminted[frame = lines]{C}{match.c}
+    \caption{Código C para reconcer expresiones regulares de Pike}
+    \label{lst:20182t3}
+  \end{listing}
+
+  \begin{enumerate}
+  \item % 20182t3p1
+    Escriba una versión rudimentaria de \mintinline{shell}{grep(1)},
+    al que se le llama como:
+    
+    \qquad\texttt{20182t3} \emph{<expresión>} \emph{<archivo>}
+
+    que escriba todas las líneas en que la \emph{<expresión>} calza.
+    No escriba nada más.
+    \\ \hspace*{\fill}(20 puntos)
+  \item % 20182t3p2
+    Modifique el código dado para agregar la operación '+'
+    (una o más veces lo anterior).
+    \\ \hspace*{\fill}(25 puntos)
+  \item % 20182t3p3
+    Modifique el código dado para agregar la operación '?'
+    (cero o una vez lo anterior).
+    \\ \hspace*{\fill}(25 puntos)
+  \item % 20172p2t4
+    Al programa con ambas operaciones adicionales
+    agregue la posibilidad de citar un caracter especial,
+    vale decir,
+    escribir por ejemplo '\textbackslash?' para calzar un '?'.
+    \\ \hspace*{\fill}(30 puntos)
+  \end{enumerate}
+  Entregue varias versiones del código de calce,
+  una para cada pregunta.
+  Explique los cambios hechos al original.
+
+  Note que \mintinline{shell}{grep(1)}
+  se llama \emph{exactamente} como se indica,
+  y únicamente escribe las líneas que calza.
+  Cualquier otra salida se considerará un error.
+  
+  Tenga cuidado,
+  para el \emph{\foreignlanguage{english}{shell}} los caracteres '*' y '?'
+  tienen significado especial,
+  para evitar accidentes se recomienda poner sus expresiones entre apóstrofes
+  al hacer pruebas.
+
+\input{condiciones}
+  \vfill\hfill LW/HvB/\LaTeXe
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

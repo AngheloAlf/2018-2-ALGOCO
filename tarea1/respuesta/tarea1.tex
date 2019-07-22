@@ -1,0 +1,224 @@
+\documentclass[spanish, fleqn]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+%\usepackage{fancyhdr}
+%\usepackage{lipsum}
+%\usepackage{enumerate}
+%\usepackage{multicol}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+\usepackage{xcolor}
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{ mathrsfs }
+\usepackage{wrapfig}
+\usepackage{enumitem}
+\usepackage{ dsfont }
+\usepackage{afterpage}
+
+\usepackage{tikz} %% Grafos
+\usepackage{fancyhdr} %% Para las cosas en las esquinas de cada pagina
+
+\usepackage[a4paper,bindingoffset=0.0in,left=0.60in,right=0.70in,top=0.7in,bottom=0.7in,footskip=.25in]{geometry}
+
+\newcommand\tab[1][0.5cm]{\hspace*{#1}}
+\newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+
+\newcommand{\cero}{0}
+\newcommand{\sumMayorIgual}[2][\cero]{\sum_{n\geq#1}{#2}}
+
+\newcommand{\eclosure}[1]{\epsilon\text{-closure}(\{#1\})}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+
+\newcommand{\numeroTarea}{1}
+\newcommand{\nombreTarea}{«\textit{La curiosidad mató al gato.}»}
+
+\newcommand{\xstar}{x^\star}
+
+\begin{document}
+
+\lstset
+{
+    language=[LaTeX]TeX,
+    breaklines=false,
+    basicstyle=\tt\scriptsize,
+    keywordstyle=\color{blue},
+    identifierstyle=\color{magenta},
+}
+
+\title{INF-155: Informática Teórica \\
+Tarea \#\numeroTarea\\
+\nombreTarea
+}
+\author{\href{mailto:anghelo.carvajal.14@gmail.com}{Anghelo Carvajal} \\ 201473062-4
+}
+
+\maketitle
+
+\pagenumbering{gobble} %% Desactiva la numeracion de paginas
+
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Tarea \numeroTarea: \nombreTarea}
+
+%% \chead{\thesection} % 
+
+%% \rhead{\rightmark} % 
+\rhead{\rightmark}
+
+\lfoot{\LaTeXe}
+
+%% \cfoot{} %
+
+\rfoot{Página \thepage}
+
+%  \thepage
+% adds number of the current page.
+%  \thechapter
+% adds number of the current chapter.
+%  \thesection
+% adds number of the current section.
+%  \chaptername
+% adds the word "Chapter" in English or its equivalent in the current language.
+%  \leftmark
+% adds name and number of the current top-level structure (for example, Chapter for reports and books classes; Section for articles ) in uppercase letters.
+%  \rightmark
+% adds name and number of the current next to top-level structure (Section for reports and books; Subsection for articles) in uppercase letters.
+
+\newpage
+
+%% \section{Section}
+
+\pagenumbering{arabic} %% Activa numeracion de paginas
+
+\section{Pregunta 1}
+
+Efectuamos el análisis de los métodos para hallar ceros para el caso de ceros simples (vale decir, $f'(x^*)\neq 0)$. Analice la convergencia de los métodos de
+
+\begin{enumerate}
+    \item[a)] Bisección.
+    \item[b)] Regula falsi.
+    \item[c)] Newton
+    \item[d)] Secante para el caso de ceros dobles (es decir, $f'(x^*) = 0)$ y $f''(x^*)\neq 0)$.
+\end{enumerate}
+
+\subsection{Respuesta 1}
+
+\begin{enumerate}
+    \item[a)] Bisección.
+    
+    Supongamos que el intervalo inicial es $[a, b]$. 
+    
+    Luego de iterar $n$ veces, el intervalo sera $\frac{b-a}{2^n}$. 
+    
+    En base a lo que nos dice este metodo, nuestro error maximo ($x_n * x^\star$) sera $\frac{\frac{b-a}{2^n}}{2}$, lo mismo que $\frac{b-a}{2^{n+1}}$.
+    
+    Si calculamos la convergencia lineal, resulta:
+    \begin{align*}
+        \lim_{n\rightarrow\infty} \left| \frac{e_{n+1}}{e_n} \right| &= \frac{\frac{b-a}{2^{n+2}}}{\frac{b-a}{2^{n+1}}} \\ 
+        &= \frac{b-a}{2*2^{n+1}} * \frac{2^{n+1}}{b-a} \\ 
+        &= \frac{1}{2}
+    \end{align*}
+    
+    Como este método tiene una razón $\frac{1}{2} < 1$, converge linealmente sin que crezca el error.
+    
+    
+    \item[b)] Regula falsi.
+    
+    A partir de la formula tenemos:
+    \begin{align*}
+        x_{n+1} &= x_n - f(x_n)\frac{x_n - x_0}{f(x_n) - f(x_0)} \\
+        x_{n+1} - \xstar &= x_n - \xstar - f(x_n)\frac{x_n - x_0}{f(x_n) - f(x_0)} \\
+        e_{n+1} &= e_n - f(x_n)\frac{x_n - x_0}{f(x_n) - f(x_0)} \\
+        \frac{e_{n+1}}{e_n} &= 1 - \frac{f(x_n)}{e_n}\frac{x_n - x_0}{f(x_n) - f(x_0)} \\
+        \frac{e_{n+1}}{e_n} &= 1 - \frac{f(x_n)}{e_n}\frac{x_n - x_0 + \xstar - \xstar }{f(x_n) - f(x_0)} \\
+        \frac{e_{n+1}}{e_n} &= 1 - \frac{f(x_n)}{e_n}\frac{e_n - e_0}{f(x_n) - f(x_0)}
+    \end{align*}
+    
+    Si expandimos un poco la serie de Taylor para la función $f(x_n)$:
+    \begin{align*}
+        f(x_n) &= f(\xstar) + f'(\xstar)(x_n - \xstar) + O((x_n - \xstar)^2) \\ 
+        f(x_n) &= 0 + f'(x_n - \xstar)(e_n) + O((x_n - \xstar)^2) \\ 
+        f(x_n) &= f'(\xstar)(e_n) + O((x_n - \xstar)^2) = O((x_n - \xstar))
+    \end{align*}
+    
+    Reemplazando en la ecuación anterior tenemos:
+    \begin{align*}
+        \frac{e_{n+1}}{e_n} &= 1 - \frac{e_n * f'(\xstar)  + O((x_n - \xstar)^2)}{e_n}\frac{e_n - e_0}{e_n*f'(\xstar) + O((x_n - \xstar)^2) - f(x_0)} \\
+        \frac{e_{n+1}}{e_n} &= 1 - \frac{e_n * f'(\xstar)  + O((x_n - \xstar)^2)}{e_n}\frac{e_n - e_0}{ O((x_n - \xstar)) - f(x_0)} \\
+        \frac{e_{n+1}}{e_n} &= 1 - \frac{e_n * f'(\xstar)  + O((x_n - \xstar)^2)}{e_n}\frac{e_0 - e_n}{f(x_0)}(1 + O(x_n - \xstar)) \\
+        \frac{e_{n+1}}{e_n} &= 1 - f'(\xstar)  \frac{e_0}{f(x_0)}(1 + O(x_n - \xstar)) \\
+        \frac{e_{n+1}}{e_n} &= 1 - f'(\xstar) \frac{e_0}{f(x_0)}
+    \end{align*}
+    
+    Finalmente, para saber si este método convergerá, tan solo tenemos que calcular $1 - f'(\xstar) \frac{e_0}{f(x_0)}$ y que de un valor menor a $1$. Lo mismo que $f'(\xstar) \frac{e_0}{f(x_0)}$ sea mayor que $0$.
+    
+    \item[c)] Newton.
+    Usando series de Taylor:
+    \begin{align*}
+        f(x^\star) &= f(x_n) + \frac{f'(x_n)(x^\star - x_n)}{1!} + \frac{f''(x_n)(x^\star - x_n)^2}{2!} + O((x^\star - x_n)^2) \\ 
+        0 &= f(x_n) + f'(x_n)(x^\star - x_n) + \frac{f''(x_n)(x^\star - x_n)^2}{2} \text{ // Reemplazamos $f(x^\star) = 0$.} \\ 
+        -f(x_n) &= f'(x_n)(x^\star - x_n) + \frac{f''(x_n)(x^\star - x_n)^2}{2} \text{ // Restamos $f(x_n)$ a toda la ecuación. } \\ 
+        -\frac{f(x_n)}{f'(x_n)} &= x^\star - x_n + \frac{f''(x_n)(x^\star - x_n)^2}{2f'(x_n)} \text{ // Dividimos por $f'(x_n)$. } \\ 
+        x_n -\frac{f(x_n)}{f'(x_n)} &= x^\star + \frac{f''(x_n)(x^\star - x_n)^2}{2f'(x_n)} \text{ // Sumamos $x_n$. } \\ 
+        x_{n+1} - x^\star &= \frac{f''(x_n)(x^\star - x_n)^2}{2f'(x_n)} \text{ // Aplicamos la igualdad $x_{n+1} = x_n -\frac{f(x_n)}{f'(x_n)}$ y restamos $x^\star$. } \\ 
+        \frac{x_{n+1} - x^\star}{(x^\star - x_n)^2} &= \frac{f''(x_n)}{2f'(x_n)} \text{ // Dividimos por $(x^\star - x_n)^2$. } \\ 
+        \frac{e_{n+1}}{e_n^2} &= \frac{f''(x_n)}{2f'(x_n)} \text{ // Finalmente aplicamos $e_n = x_n - x^\star$. }
+    \end{align*}
+    
+    Al analizar la convergencia cuadrática ($lim_{n\rightarrow\infty} \left| \frac{e_{n+1}}{e_n^2} \right| $), vemos que es lo mismo que calcular $lim_{n\rightarrow\infty} \left| \frac{f''(x_n)}{2f'(x_n)} \right| $ y que esto sea distinto a infinito.
+    
+    \item[d)] Secante para el caso de ceros dobles (es decir, $f'(x^*) = 0)$ y $f''(x^*)\neq 0)$.
+    
+    El método de la secante dice:
+    \begin{equation*}
+        x_{n+2} = x_{n+1} - f(x_{n+1})\frac{x_{n+1} - x_{n}}{f(x_{n+1}) - f(x_n)}
+    \end{equation*}
+    donde $x_0$ y $x_1$ son el intervalo de la función en cuestión.
+    
+    Sea $x^\star$, de modo que $f(x^\star) = 0$ y $e_n = (x^\star - x_n)$ el error en la iteración $n$, de modo que $x_n = (x^\star - e_n)$. Aplicamos lo anterior y tenemos:
+    \begin{align*}
+        x^\star - e_{n+2} &= x^\star - e_{n+1} - f(x_{n+1})\frac{x^\star - e_{n+1} - x^\star + e_{n}}{f(x_{n+1}) - f(x_n)} \\
+        - e_{n+2} &= - e_{n+1} - f(x_{n+1})\frac{ - e_{n+1} + e_{n}}{f(x_{n+1}) - f(x_n)}  \\
+        e_{n+2} &= e_{n+1} - f(x_{n+1})\frac{e_{n+1} - e_{n}}{f(x_{n+1}) - f(x_n)} 
+    \end{align*}
+    
+    Si expandimos un poco la serie de Taylor para la función $f(x_n)$:
+    \begin{align*}
+        f(x_n) &= f(\xstar) + f'(\xstar)(x_n - \xstar)  f''(\xstar)\frac{(x_n - \xstar)^2}{2} + O((x_n - \xstar)^3) \\ 
+        f(x_n) &= 0 + 0 +   f''(\xstar)\frac{(x_n - \xstar)^2}{2} + O((x_n - \xstar)^3) \\ 
+        f(x_n) &= f''(\xstar)\frac{e_n^2}{2} + O(e_n^3) = O(e_n^2) \\ 
+    \end{align*}
+    
+    Reemplazando en la ecuación anterior tenemos:
+    \begin{align*}
+        e_{n+2} &= e_{n+1} - (f''(\xstar)\frac{e_{n+1}^2}{2} + O(e_{n+1}^3))\frac{e_{n+1} - e_{n}}{(f''(\xstar)\frac{e_{n+1}^2}{2} + O(e_{n+1}^3)) - f(x_n)} \\
+        e_{n+2} &= e_{n+1} - f''(\xstar)\frac{e_{n+1}^2}{2}\frac{e_{n+1} - e_{n}}{O(e_{n+1}^2) - f(x_n)} \\
+        e_{n+2} &= e_{n+1} + f''(\xstar)\frac{e_{n+1}^2}{2}\frac{e_{n+1} - e_{n}}{f(x_n)} (1 + O(e_{n+1}^2) ) \\
+        \frac{e_{n+2}}{e_{n+1}} &= 1 + f''(\xstar)\frac{e_{n+1}^2}{2e_{n+1}}\frac{e_{n+1} - e_{n}}{f(x_n)} (1 + O(e_{n+1}^2) ) \\
+        \frac{e_{n+2}}{e_{n+1}} &= 1 + f''(\xstar)\frac{e_{n+1}}{2}\frac{e_{n+1} - e_{n}}{f''(\xstar)\frac{e_n^2}{2} + O(e_n^3)} (1 + O(e_{n+1}^2) ) \\
+        \frac{e_{n+2}}{e_{n+1}} &= 1 + f''(\xstar)\frac{e_{n+1}}{2}\frac{e_{n+1} - e_{n}}{f''(\xstar)\frac{e_n^2}{2}} (1 + O(e_{n+1}^2) ) (1 + O(e_n^3)) \\
+        \frac{e_{n+2}}{e_{n+1}} &= 1 + \frac{f''(\xstar)}{f''(\xstar)}\frac{2e_{n+1}}{2}\frac{e_{n+1} - e_{n}}{e_n^2} (1 + O(e_{n+1}^2) ) (1 + O(e_n^3)) \\
+        \frac{e_{n+2}}{e_{n+1}} &= 1 + e_{n+1}\frac{e_{n+1} - e_{n}}{e_n^2} (1 + O(e_{n+1}^2) ) (1 + O(e_n^3)) \\
+        \\
+        \\
+        \frac{e_{n+1}}{e_n} &= 1 - \frac{e_n * f'(\xstar)  + O((x_n - \xstar)^2)}{e_n}\frac{e_n - e_0}{e_n*f'(\xstar) + O((x_n - \xstar)^2) - f(x_0)} \\
+        \frac{e_{n+1}}{e_n} &= 1 - \frac{e_n * f'(\xstar)  + O((x_n - \xstar)^2)}{e_n}\frac{e_n - e_0}{ O((x_n - \xstar)) - f(x_0)} \\
+        \frac{e_{n+1}}{e_n} &= 1 - \frac{e_n * f'(\xstar)  + O((x_n - \xstar)^2)}{e_n}\frac{e_0 - e_n}{f(x_0)}(1 + O(x_n - \xstar)) \\
+        \frac{e_{n+1}}{e_n} &= 1 - f'(\xstar)  \frac{e_0}{f(x_0)}(1 + O(x_n - \xstar)) \\
+        \frac{e_{n+1}}{e_n} &= 1 - f'(\xstar) \frac{e_0}{f(x_0)}(1 + O(x_n - \xstar)) \\
+        \frac{e_{n+1}}{e_n} &= 1 - f'(\xstar) \frac{e_0}{f(x_0)}
+    \end{align*}
+    
+\end{enumerate}
+
+
+\end{document}

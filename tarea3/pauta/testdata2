@@ -1,0 +1,15 @@
+A file for matching metacharacters ^*+?$
+
+Try several stars in a row:
+
+/*************************/
+/*                       */
+/* C comment block style */
+/*                       */
+/*************************/
+
+\^ a caret here... and dots
+
+How about plusses: C++.
+
+Profanity: #%*&@$ and more ++++.

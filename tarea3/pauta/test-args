@@ -1,0 +1,25 @@
+#!/usr/bin/env bats
+
+@test "No arguments" {
+   run ./20182t3p1
+   [ "$status" -eq 1 ]
+   [ "$output" = "usage: ./20182t3p1 regex file" ]
+}
+
+@test "One argument" {
+   run ./20182t3p1 'regexp'
+   [ "$status" -eq 1 ]
+   [ "$output" = "usage: ./20182t3p1 regex file" ]
+}
+
+@test "Three arguments" {
+   run ./20182t3p1 1 2 3
+   [ "$status" -eq 1 ]
+   [ "$output" = "usage: ./20182t3p1 regex file" ]
+}
+
+@test "Nonexistent file" {
+   run ./20182t3p1 'regexp' nonexistent-file
+   [ "$status" -eq 1 ]
+   [ "$output" = "./20182t3p1: can't open nonexistent-file" ]
+}

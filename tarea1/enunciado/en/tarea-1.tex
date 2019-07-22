@@ -1,0 +1,42 @@
+\documentclass[spanish, fleqn]{article}
+\usepackage{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{fourier}
+\usepackage{icomma}
+\usepackage{csquotes}
+\usepackage{amsmath, amsfonts, amsthm, fourier}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+\usepackage{graphicx}
+\usepackage{listings}
+
+\newcommand{\num}{1}
+\title{Tarea \num\\
+       \large Algoritmos y Complejidad\\[3ex]
+       \emph{\textquote{La curiosidad mató al gato\ldots}}}
+\author{Algorithm Knaves}
+\date{2018-09-11}
+
+\begin{document}
+
+\maketitle
+
+  Efectuamos el análisis de los métodos para hallar ceros
+  para el caso de ceros simpĺes
+  (vale decir,
+   \(f'(x^*) \ne 0\)).
+  Analice la convergencia de los métodos de (a)~bisección,
+  (b)~\emph{\foreignlanguage{latin}{regula falsi}},
+  (c)~Newton
+  y (d)~secante
+  para el caso de ceros dobles
+  (es decir,
+   \(f'(x^*) = 0\) y \(f''(x^*) \ne 0\)).
+
+\input{condiciones}
+
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

@@ -1,0 +1,231 @@
+\documentclass[spanish, fleqn]{article}
+\usepackage[spanish]{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb}
+%\usepackage{fancyhdr}
+%\usepackage{lipsum}
+%\usepackage{enumerate}
+%\usepackage{multicol}
+\usepackage[colorlinks, urlcolor=blue]{hyperref}
+\usepackage{graphicx}
+\graphicspath{ {images/} }
+\usepackage{xcolor}
+\usepackage{verbatim}
+\usepackage{listings}
+\usepackage{ mathrsfs }
+\usepackage{wrapfig}
+\usepackage{enumitem}
+\usepackage{ dsfont }
+\usepackage{afterpage}
+
+\usepackage{tikz} %% Grafos
+\usepackage{fancyhdr} %% Para las cosas en las esquinas de cada pagina
+
+\usepackage[a4paper,bindingoffset=0.0in,left=0.60in,right=0.70in,top=0.7in,bottom=0.7in,footskip=.25in]{geometry}
+
+\newcommand\tab[1][0.5cm]{\hspace*{#1}}
+\newcommand{\overbar}[1]{\mkern 1.5mu\overline{\mkern-1.5mu#1\mkern-1.5mu}\mkern 1.5mu}
+
+\newcommand{\cero}{0}
+\newcommand{\sumMayorIgual}[2][\cero]{\sum_{n\geq#1}{#2}}
+
+\newcommand{\eclosure}[1]{\epsilon\text{-closure}(\{#1\})}
+
+\newcommand\blankpage{%
+    \null
+    \thispagestyle{empty}%
+    \addtocounter{page}{-1}%
+    \newpage}
+    
+\definecolor{bggray}{rgb}{0.95,0.95,0.95}
+\lstdefinestyle{mypy}{
+  language=python,
+  backgroundcolor=\color{bggray},
+  basicstyle=\ttfamily\small\color{orange!70!black},
+  frame=L,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{red},
+  numbers=left,
+  showstringspaces=false,
+  xrightmargin=5pt,
+  xleftmargin=10pt
+}
+\lstdefinestyle{myC}{
+  language=C,
+  backgroundcolor=\color{bggray},
+  basicstyle=\ttfamily\small\color{orange!70!black},
+  frame=L,
+  keywordstyle=\bfseries\color{green!40!black},
+  commentstyle=\itshape\color{purple!40!black},
+  identifierstyle=\color{blue},
+  stringstyle=\color{red},
+  numbers=left,
+  showstringspaces=false,
+  xrightmargin=5pt,
+  xleftmargin=10pt
+}
+\renewcommand{\lstlistingname}{Código}   
+    
+
+\newcommand{\ramo}{INF-155: Algoritmos y complejidad}
+\newcommand{\numeroTarea}{3}
+\newcommand{\nombreTarea}{\textit{Recursion is beautiful}}
+
+\newcommand{\xstar}{x^\star}
+
+\begin{document}
+
+\lstset
+{
+    language=[LaTeX]TeX,
+    breaklines=false,
+    basicstyle=\tt\scriptsize,
+    keywordstyle=\color{blue},
+    identifierstyle=\color{magenta},
+}
+
+\title{\ramo \\
+Tarea \#\numeroTarea\\
+\nombreTarea
+}
+\author{\href{mailto:anghelo.carvajal.14@gmail.com}{Anghelo Carvajal} \\ 201473062-4
+}
+
+\maketitle
+
+\pagenumbering{gobble} %% Desactiva la numeracion de paginas
+
+
+\pagestyle{fancy}
+\fancyhf{}
+\lhead{Tarea \numeroTarea: \nombreTarea}
+
+%% \chead{\thesection} % 
+
+%% \rhead{\rightmark} % 
+\rhead{Pregunta \thesection}
+
+\lfoot{\LaTeXe}
+
+%% \cfoot{} %
+
+\rfoot{Página \thepage}
+
+%  \thepage
+% adds number of the current page.
+%  \thechapter
+% adds number of the current chapter.
+%  \thesection
+% adds number of the current section.
+%  \chaptername
+% adds the word "Chapter" in English or its equivalent in the current language.
+%  \leftmark
+% adds name and number of the current top-level structure (for example, Chapter for reports and books classes; Section for articles ) in uppercase letters.
+%  \rightmark
+% adds name and number of the current next to top-level structure (Section for reports and books; Subsection for articles) in uppercase letters.
+
+\newpage
+
+%% \section{Section}
+
+\pagenumbering{arabic} %% Activa numeracion de paginas
+
+\section{Pregunta 1}
+
+Escriba una versión rudimentaria de \texttt{grep(1)}, al que se le llama como:
+
+\tab \texttt{tarea-3-1 <expresión> <archivo>}
+
+que escriba todas las líneas en que la <expresión> calza. No escriba nada más.
+
+\subsection{Respuesta 1}
+
+Teniendo en consideración lo pedido, no es necesario modificar el código de \texttt{match.c} que se nos ha entregado. Tan solo debemos escribir funciones que usen las funciones de \texttt{match.c}. Un simple \texttt{main.c}.
+
+El código es el siguiente:
+
+\lstinputlisting[
+    style=myC,
+    caption=\texttt{main.c}
+    ] {src/common/main.c}
+    
+Este código consta de 4 funciones:
+\begin{itemize}
+    \item \texttt{void checkCommandLine(int argc, char *argv[])}. Función que chequea que los parámetros con los que se invoco el programa sean los mínimos (2 parámetros). 
+    
+    Se invoca con los mismos parámetros que recibe la función \texttt{main}. Si los parámetros no son los suficientes, entrega un mensaje a \texttt{stdout} y sale del programa.
+    
+    \item \texttt{void testError(bool expression, const char *message)}. Una suerte de \texttt{assert}. 
+    
+    Si \texttt{expression} es \texttt{true} imprime al \texttt{stderr} el mensaje \texttt{message} y luego finaliza la ejecución del programa. 
+    
+    En caso de que \texttt{expression} sea \texttt{false}, esta función hace nada.
+    
+    \item \texttt{char *readFullFile(const char * fileName)}. Función que recibe un nombre de archivo y entrega un arreglo de caracteres que contiene los contenidos del archivo. 
+    
+    En caso de algún error, esta función finaliza la ejecución del programa mostrando un mensaje en \texttt{stderr} (invoca a \texttt{testError()}). 
+    
+    Note que el arreglo de caracteres fue creado usando \texttt{malloc}, así que es responsabilidad del \textit{caller} llamar al \texttt{free} correspondiente.
+    
+    \item \texttt{int main(int argc, char *argv[])}. Muestra las lineas del archivo que calzan con la expresión entregada como parámetro.
+\end{itemize}
+
+En el resto de preguntas lo único que cambia es el código de \texttt{match.c}, de modo que el archivo \texttt{main.c} sera el mismo en para todas las preguntas.
+
+\section{Pregunta 2}
+
+Modifique el código dado para agregar la operación `+' (una o más veces lo anterior).
+
+\subsection{Respuesta 2}
+
+Para poder implementar lo pedido, debemos agregar una función. Como somos sumamente creativos, la llamaremos \texttt{matchplus()}. Esta función es casi igual que la función \texttt{matchstar()}, con la diferencia que se cambia el \texttt{do-while} por un \texttt{while}, debido a que debemos calzar al menos 1 del carácter pedido.
+
+Luego simplemente agregaremos esta posibilidad dentro de \texttt{matchhere()}.
+
+El código resultante es:
+
+\lstinputlisting[
+    style=myC,
+    caption=\texttt{2/match.c}
+    ] {src/2/match.c}
+
+\section{Pregunta 3}
+
+Modifique el código dado para agregar la operación `?’ (cero o una vez lo anterior).
+
+\subsection{Respuesta 3}
+
+Agregaremos una nueva función que se encargue de calzar el caso `?'. En base a nuestra creatividad, la llamamos \texttt{matchquestion()}. La implementación es sencilla, simplemente si es que el carácter calza, avanzamos 1 en la lectura del texto. Si no calza, no avanzamos.
+
+Luego agregamos esta posibilidad al conjunto de \textit{if}s de la función \texttt{matchhere()}.
+
+El resultado es el siguiente:
+
+\lstinputlisting[
+    style=myC,
+    caption=\texttt{3/match.c}
+    ] {src/3/match.c}
+
+\section{Pregunta 4}
+
+Al programa con ambas operaciones adicionales agregue la posibilidad de citar un carácter especial, vale decir, escribir por ejemplo `\textbackslash ?' para calzar un `?'.
+
+\subsection{Respuesta 4}
+
+Finalmente, para poder calzar un carácter especial que comienza con `\textbackslash', creamos una función (\texttt{matchscape()}!), la cual calza el carácter que se quiere escapar. Si no calza, retorna 0. Si calza, sigue leyendo. 
+
+Esta función también considera la posibilidad de que el carácter escapado este continuado por los caracteres especiales  `*', `+' o  `?' y los calza de forma correspondiente.
+
+Lo agregamos a \texttt{matchhere} y tenemos el problema solucionado.
+
+Note que la forma en que se implemento, si se encuentra el carácter `\textbackslash', el carácter siguiente debe calzar en el texto, o 
+
+\lstinputlisting[
+    style=myC,
+    caption=\texttt{4/match.c}
+    ] {src/4/match.c}
+
+
+\end{document}
