@@ -1,0 +1,254 @@
+\documentclass[english, spanish, fleqn]{article}
+\usepackage{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, fourier}
+\usepackage[ruled, noline]{algorithm2e}
+\usepackage{pgf}
+
+%%%
+%%% For algorithm2e
+%%%
+
+\SetAlgorithmName{Algoritmo}{Algoritmo}{Índice de algoritmos}
+
+\SetAlCapSty{mdseries}
+\SetKwProg{Procedure}{procedure}{}{}
+\SetKwProg{Function}{function}{}{}
+
+\begin{document}
+\thispagestyle{empty}
+  \begin{center}
+    {\huge\textbf{Pauta de Corrección\\[0.4\baselineskip]
+		  Certamen Recuperativo\\[0.3\baselineskip]
+		  Algoritmos y Complejidad}}\\
+    \vspace{2ex}
+    {\large 28 de diciembre de 2018}
+  \end{center}
+  \vspace{5mm}
+
+  \begin{enumerate}
+  \item % 20182cRp1
+    Las tres partes son independientes.
+    \begin{enumerate}
+    \item % 20182cRp1a
+      Habiendo \(3\) coeficientes,
+      esperamos una fórmula exacta hasta grado \(2\).
+    \item % 20182cRp1b
+      Para hallar los coeficientes,
+      podemos plantear un sistema de ecuaciones.
+      Sabemos que:
+      \begin{align*}
+        \int_-1^1 x^k \, \mathrm{d} x
+          &= \left. \frac{x^{k + 1}}{k + 1} \right|_{-1}^1 \\
+          &= \frac{2}{k + 1} [ 2 \mid k + 1 ]
+      \end{align*}
+      por lo que obtenemos:
+      \begin{alignat*}{4}
+        &A_{-}       &+& A_0 &+& A_{+}       &=& 2 \\
+       -&A_{-} x_0   &&      &+& A_{+} x_0   &=& 0 \\
+        &A_{-} x_0^2 &&      &+& A_{+} x_0^2 &=& \frac{2}{3} \\
+       -&A_{-} x_0^3 &&      &+& A_{+} x_0^3 &=& 0
+      \end{alignat*}
+      De la ecuación para \(k = 1\) tenemos que \(A_{-} = A_{+}\),
+      con lo que inesperadamente se cumple para \(k = 3\) también.
+      En realidad,
+      cumple para todo \(k\) impar.
+      El método es exacto hasta grado \(3\).
+
+      Con la ecuación para \(k = 0\) ahora tenemos que \(A_0 = 2 - 2 A_{+}\),
+      la ecuación para \(k = 2\) indica:
+      \begin{equation*}
+        A_{+}
+          = \frac{1}{3 x_0}
+      \end{equation*}
+      En resumen:
+      \begin{align*}
+        A_{-}
+          &= \frac{1}{3 x_0} \\
+        A_0
+          &= 2 - \frac{2}{3 x_0} \\
+        A_{+}
+          &= \frac{1}{3 x_0}
+      \end{align*}
+      Es claro que no necesariamente cumple para \(k = 4\).
+    \item % 20182cRp1c
+      Si podemos elegir \(x_0\)
+      (idealmente \(x_{-}\) y \(x_{+}\),
+       los puntos no necesariamente son simétricos en general),
+      tenemos \(5\) parámetros,
+      podemos esperar una fórmula exacta hasta grado \(4\).
+      Por la observación anterior,
+      será exacta hasta grado \(5\).
+      Tenemos dos caminos:
+      \begin{itemize}
+      \item
+        Usar la teoría de cuadratura gaussiana,
+        desarrollando los polinomios ortogonales del caso
+        y obteniendo los nodos como sus ceros.
+      \item 
+        Extender el sistema de ecuaciones del punto anterior.
+      \end{itemize}
+      En nuestro caso es más fácil extender el sistema
+      con la ecuación adicional:
+      \begin{equation*}
+        A_{-} x_0^4 + A_{+} x_0^4
+          = \frac{2}{5}
+      \end{equation*}
+      Conocemos \(A_{-}, A_{+}\):
+      \begin{equation*}
+        \frac{1}{3 x_0} x_0^4 + \frac{1}{3 x_0} x_0^4
+          = \frac{2}{5} \\
+      \end{equation*}
+      Directamente obtenemos:
+      \begin{equation*}
+        x_0
+          = \sqrt[3]{\frac{3}{5}}
+      \end{equation*}
+      y resultan:
+      \begin{align*}
+        A_{-}
+          &= A_{+}
+           = \frac{\sqrt[3]{45}}{9} \\
+        A_0
+          &= \frac{18 - 2 \sqrt[3]{45}}{9}
+      \end{align*}
+    \end{enumerate}
+    
+  \vspace*{2\baselineskip}
+  \begin{minipage}{1.0\linewidth}
+    {\Large\textbf{Puntajes}}\\[0.5\baselineskip]
+    \begin{tabular}{l@{\;}lrr}
+      \multicolumn{2}{l}{\textbf{Total}}	       &    & 25 \\
+      a) & Grado máximo                                &  5 &    \\
+      b) & Obtención de coeficientes                   & 10 &    \\
+      c) & Mejor valor de \(x_0\)                      & 10 &
+    \end{tabular}
+  \end{minipage}
+\pagebreak[4]
+  \item % 20182cRp2
+    Vemos que interesa el largo del intervalo \([i, j - 1]\)
+    en el tiempo de ejecución.
+    Sea \(T(k)\) el tiempo de ejecución de \(\operatorname{SlowHeap}(i, j)\)
+    cuando \(j - i = k\).
+    Del algoritmo,
+    la recurrencia exacta es:
+    \begin{equation*}
+      T(n)
+	= T(\lfloor n / 2 \rfloor)
+	   + T(\lceil n / 2 \rceil - 1) + \Theta(n)
+    \end{equation*}
+    Podemos aplicar el teorema maestro a la recurrencia aproximada:
+    \begin{equation*}
+      T(n)
+	= 2 T(n/2) + \Theta(n)
+    \end{equation*}
+    Esto es \(a = 2, b = 2, f(n) = \Theta(n)\),
+    el valor crítico es \(\alpha = \log_2 2 = 1\).
+    Se aplica el cuarto caso del teorema maestro,
+    con \(\beta = 0\):
+    \begin{align*}
+      T(n)
+	&= \Theta(n^\alpha \log^{\beta + 1} n) \\
+	&= \Theta(n \log n)
+    \end{align*}
+
+    \vspace*{2\baselineskip}
+    \begin{minipage}{1.0\linewidth}
+      {\Large\textbf{Puntajes}}\\[0.5\baselineskip]
+      \begin{tabular}{lrr}
+	\textbf{Total}					     &	  & 30 \\
+	Plantear la recursión				     & 10 &    \\
+	Aplicar el teorema maestro			     & 20 &
+      \end{tabular}
+    \end{minipage}
+\pagebreak[4]
+  \item % 20182cRp3
+    Corresponde hacer un análisis amortizado.
+    Como hay una única operación,
+    lo más sencillo es usar el método agregado.
+    Sea \(n\) el número máximo de widgets fabricados.
+    Es claro que George Akeley hará un total de \(n\) viajes,
+    el costo por este concepto es \(n v\).
+    El número total de cambios de dígito es
+    (el último dígito cambia \(n\) veces,
+     el dígito de las decenas \(\lfloor n / 10 \rfloor\) veces,
+     y así sucesivamente):
+    \begin{align*}
+      n + \lfloor n / 10 \rfloor + \lfloor n / 10^2 \rfloor + \dotsb
+	&= \sum_{k \ge 0} \lfloor n / 10^k \rfloor \\
+	&< \sum_{k \ge 0} n / 10^k \\
+	&= n \sum_{k \ge 0} 10^{-k} \\
+	&= n \cdot \frac{1}{1 - 10^{-1}} \\
+	&= \frac{10 n}{9}
+    \end{align*}
+    El costo total de \(n\) operaciones está acotado por:
+    \begin{equation*}
+      n v + \frac{10 n c}{9}
+	= n \left( v + \frac{10 c}{9} \right)
+    \end{equation*}
+    con lo que el costo amortizado por operación está acotado por
+    \(v + 10 c / 9\).
+
+    \vspace*{2\baselineskip}
+    \begin{minipage}{1.0\linewidth}
+      {\Large\textbf{Puntajes}}\\[0.5\baselineskip]
+      \begin{tabular}{lrr}
+	\textbf{Total}					     &	  & 30 \\
+	Usar método agregado				     &	5 &    \\
+	Costo de viajes					     &	5 &    \\
+	Costo de cambios de dígito			     & 10 &    \\
+	Cotas manejables				     &	5 &    \\
+	Costo amortizado				     &	5 &
+      \end{tabular}
+    \end{minipage}
+\pagebreak[4]
+  \item % 20182cRp4
+    Por turno.
+    \begin{enumerate}
+    \item % 20182cRp4a
+      El tiempo de ejecución del algoritmo
+      no varía mayormente con la instancia presentada,
+      y la tasa de error es menor a \(1/2\).
+      es un algoritmo de Monte~Carlo.
+      
+      Su error es unilateral,
+      con preferencia verdadero
+      (\emph{\foreignlanguage{english}{true biased}}).
+    \item % 20182cRp4b
+      En una corrida,
+      la probabilidad de resultado correcto es \(1/n\),
+      por lo que la probabilidad de falla es \(1 - 1/n\);
+      en \(k\) corridas independientes la probabilidad de error en todas
+      es:
+      \begin{equation*}
+        \left( 1 - \frac{1}{n} \right)^k
+      \end{equation*}
+      Esto se parece seductivamente a la cota y límite:
+      \begin{equation*}
+        \lim_{n \to \infty} \left( 1 - \frac{1}{n} \right)^n
+          = \frac{1}{\mathrm{e}}
+      \end{equation*}
+      por lo que para \(n\) grande la probabilidad de respuesta correcta
+      en \(n\) corridas independientes es:
+      \begin{equation*}
+        1 - \frac{1}{\mathrm{e}}
+      \end{equation*}
+    \end{enumerate}
+
+  \vspace*{2\baselineskip}
+  \begin{minipage}{1.0\linewidth}
+    {\Large\textbf{Puntajes}}\\[0.5\baselineskip]
+    \begin{tabular}{l@{\;}lrr}
+      \multicolumn{2}{l}{\textbf{Total}}	       &    & 30 \\
+      a) & Clasificar                                  & 10 &    \\
+      b) & Análisis                                    & 20 &
+    \end{tabular}
+  \end{minipage}
+  \end{enumerate}
+  \vfill\hfill HvB/\LaTeXe
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

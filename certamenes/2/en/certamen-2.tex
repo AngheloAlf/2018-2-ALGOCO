@@ -1,0 +1,225 @@
+\documentclass[english, spanish, fleqn]{article}
+\usepackage{pgf}
+\usepackage[ruled, noline]{algorithm2e}
+\usepackage{amsmath, amsthm, amssymb, fourier, mathrsfs}
+\usepackage{enumitem}
+\usepackage{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[top=2.5cm, bottom=2cm, left=2cm, right=2cm]{geometry}
+
+\newtheorem*{theorem}{Teorema}
+
+\SetKwProg{Function}{function}{}{}
+\SetKwProg{Procedure}{procedure}{}{}
+
+\DeclareMathOperator{\var}{var}
+\DeclareMathOperator{\Exp}{\mathbb{E}}
+
+\begin{document}
+\pagestyle{empty}
+  \begin{center}
+    {\huge\textbf{Segundo Certamen\\[0.25\baselineskip]
+                  Algoritmos y Complejidad}}\\
+    \vspace{0.5\baselineskip}
+    {\large 22 de diciembre de 2018}
+  \end{center}
+  \vspace{2mm}
+  \begin{center}
+    \pgfimage[width=0.65\textwidth]{airplanes_and_spaceships}
+    % www.xkcd.org/2074
+  \end{center}
+  \vspace{2.5mm}
+  \begin{enumerate}
+  \item % 20172c2p1
+    Un vehículo parte del punto \(0\) y debe llegar al punto \(F\).
+    Tiene un estanque con capacidad para viajar \(d\)~kilómetros sin recargar.
+    Dadas posiciones \(s_1, s_2, \dotsc, s_n\) de estaciones de servicio,
+    demuestre que el algoritmo
+    de recargar combustible cada vez en la estación más lejana
+    que puede alcanzar
+    minimiza el número de paradas.
+    \\ \hspace*{\fill}(25 puntos)
+  \item % 20182c2p
+    Para cierto problema de tamaño \(n\)
+    cuenta con tres algoritmos alternativos.
+    ¿Cuál elije si \(n\) es grande,
+    y porqué?
+    \begin{description}
+    \item[Algoritmo A:]
+      Ordena los datos dados
+      (el costo de esto es \(\Theta(n \log n)\)),
+      divide en \(3\) problemas de tamaño \(n / 3\)
+      y combina en tiempo constante.
+    \item[Algoritmo B:]
+      Resuelve recursivamente \(2\) problemas de tamaño \(n - 1\) y \(n - 2\)
+      y combina las soluciones en tiempo constante.
+    \item[Algoritmo C:]
+      Divide el problema de tamaño \(n\)
+      en \(5\) problemas de tamaño \(n / 4\)
+      y combina las soluciones en tiempo \(\Theta(n^2)\).
+    \end{description}
+    \hspace*{\fill}(35 puntos)
+  \item % 20182c2p3
+    En un río hay ciudades
+    en las posiciones \(a_1, \dotsc, a_n\) en su ribera izquierda
+    y \(b_1, \dotsc, b_n\) en la ribera derecha.
+    Hay que conectar el máximo de ciudades con puentes,
+    si se permite solo conectar \(a_i\) con \(b_i\)
+    de manera que no se crucen puentes
+    (las posiciones en ambas riberas
+     no necesariamente vienen en orden).
+    Plantee programación dinámica
+    (la recurrencia con sus condiciones de borde,
+     cómo almacenar los resultados intermedios,
+     cuál es el resultado final
+     y el orden de cálculo)
+    para resolver este problema.
+    \\ \hspace*{\fill}(30 puntos)
+  \item % 20182c2p4
+    Alice, Bob y Charlie discuten
+    sobre cómo elegir al azar con igual probabilidad entre \(1, 2, 3\).
+    Proponen lanzar una moneda
+    que da cara
+    (\emph{\foreignlanguage{english}{heads}}, \(H\))
+    con probabilidad \(p\)
+    o sello (\emph{\foreignlanguage{english}{tails}}, \(T\)):
+    \begin{description}
+    \item[Alice:]
+      Lanzar dos veces,
+      responder \(1\) si resulta \(H H\),
+      \(2\) si es \(T H\),
+      \(3\) para \(H T\),
+      y repetir si resulta \(T T\).
+    \item[Bob:]
+      Lanzar dos veces,
+      responder el número de \(H\) más uno.
+    \item[Charlie:]
+      Lanzar tres veces.
+      Si sale una única \(H\),
+      responder en qué lanzamiento apareció.
+      Si no,
+      repetir.
+    \end{description}
+    ¿Para qué valores de \(0 < p < 1\),
+    si los hay,
+    es correcto cada uno de los tres?
+    \\ \hspace*{\fill}(30 puntos)
+  \item % 20182c2p5
+    La estructura \emph{fila ordenada}
+    maneja operaciones \(\operatorname{orderedpush}(x)\),
+    que elimina los elementos menores a \(x\) del inicio
+    y los reemplaza por \(x\),
+    y la operación \(\operatorname{pop}()\),
+    que elimina el primer elemento de la fila.
+    Si se construye mediante una lista enlazada,
+    agregando y eliminando del principio,
+    demuestre que las operaciones tienen costo amortizado \(O(1)\).
+    \\ \hspace*{\fill}(30 puntos)
+  \end{enumerate}
+  \vspace*{\fill}\hspace*{\fill}HvB/\LaTeXe
+\pagebreak[4]
+\begin{center}
+  \huge\textbf{Torpedo}
+\end{center}
+\section*{Teorema maestro}
+\label{sec:teorema-maestro}
+
+  Al dividir un problema de tamaño \(n\)
+  en \(a\) problemas de tamaño \(n / b\)
+  que se resuelven recursivamente,
+  si el trabajo de dividir y combinar soluciones es \(f(n) > 0\),
+  el tiempo para resolver un problema de tamaño \(n\) es,
+  para \(\alpha = \log_b a\):
+  \begin{equation*}
+    t(n)
+      = a t(n / b) + f(n)
+    \quad t(1) = t_1
+  \end{equation*}
+  cuya solución es:
+  \begin{equation*}
+    t(n)
+      = \begin{cases}
+          \Theta(n^\alpha)
+             & \text{\(f(n) = O(n^c)\) para \(c < \alpha\)} \\
+          \Theta(n^\alpha)
+             & \text{\(f(n) = \Theta(n^\alpha \log^\beta n)\)
+                     con \(\beta < -1\)} \\
+          \Theta(n^\alpha \log \log n)
+             & \text{\(f(n) = \Theta(n^\alpha \log^\beta n)\)
+                     con \(\beta = -1\)} \\
+          \Theta(n^\alpha \log^{\beta + 1} n)
+             & \text{\(f(n) = \Theta(n^\alpha \log^\beta n)\)
+                     con \(\beta > -1\)} \\
+          \Theta(f(n))
+            & \text{\(f(n) = \Omega(n^c)\) con \(c > \alpha\)
+                    y \(a f(n / b) < k f(n)\) para \(n\) grande
+                    con \(k < 1\)}
+        \end{cases}
+  \end{equation*}
+
+\section*{Algunas series notables}
+\label{sec:series}
+
+  En lo que sigue,
+  \(m, n \in \mathbb{N}\),
+  \(k \in \mathbb{N}_0\)
+  y \(\alpha, \beta \in \mathbb{C}\).
+  \begin{equation*}
+    \frac{1}{1 - a z}
+      = \sum_{k \ge 0} a^k z^k
+    \qquad
+    \frac{1 - z^{n + 1}}{1 - z}
+      = \sum_{0 \le k \le n} z^k
+    \qquad
+    \frac{z}{(1 - z)^2}
+      = \sum_{k \ge 0} k z^k
+  \end{equation*}
+  \begin{equation*}
+    (1 + z)^\alpha
+      = \sum_{n \ge 0} \binom{\alpha}{n} z^n
+	 \qquad \binom{\alpha}{n}
+	     = \frac{\alpha^{\underline{n}}}{n!}
+	     = \frac{\alpha (\alpha - 1) \dotsm (\alpha - n + 1)}{n!}
+	 \qquad
+    \binom{n}{k}
+	     = \frac{n!}{k! (n - k)!}
+  \end{equation*}
+  \begin{equation*}
+    \binom{1/2}{n}
+      = \frac{(-1)^{n - 1}}{n 2^{2 n - 1}} \, \binom{2 n - 2}{n - 1}
+	    \quad \text{\ (si \(n \ge 1\))}
+      \qquad
+    \binom{-1/2}{n}
+      = \frac{(-1)^n}{2^{2 n}} \, \binom{2 n}{n} \qquad
+    \binom{-n}{k}
+      = (-1)^k \, \binom{n + k - 1}{n - 1}
+  \end{equation*}
+  \begin{equation*}
+    \frac{1}{(1 - z)^{n + 1}}
+      = \sum_{k \ge 0} \binom{n + k}{n} z^k
+      = \frac{1}{n!}
+	   \sum_{k \ge 0} (k + 1) (k + 2) \dotsm (k + n) z^k
+      = \frac{1}{n!} \sum_{k \ge 0} (k + 1)^{\bar{n}} z^k
+  \end{equation*}
+  \begin{equation*}
+    \sum_{n \ge 0} \binom{n}{k} z^n
+      = \frac{z^k}{(1 - z)^{k + 1}}
+  \end{equation*}
+\section*{Números de Fibonacci:}
+
+  \begin{align*}
+    &F_{n + 2} = F_{n + 1} + F_n \quad F_0 = 0, F_1 = 1
+      \qquad \sum_{n \ge 0} F_n z^n = \frac{z}{1 - z - z^2}
+      \qquad \sum_{n \ge 0} F_{n + 1} z^n = \frac{1}{1 - z - z^2} \\
+    &F_n = \frac{\tau^n - \phi^n}{\sqrt{5}}
+      \qquad
+      \tau = \frac{1 + \sqrt{5}}{2} \approx 1,61803
+      \quad \phi = \frac{1 - \sqrt{5}}{2}
+                 = 1 - \tau = -1 / \tau \approx -0,61803
+  \end{align*}
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

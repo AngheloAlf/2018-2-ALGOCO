@@ -1,0 +1,99 @@
+\documentclass[english, spanish, fleqn]{article}
+\usepackage{pgf}
+\usepackage[ruled, noline, noend]{algorithm2e}
+\usepackage{amsmath, amsthm, amssymb, fourier, mathrsfs}
+\usepackage{enumitem}
+\usepackage{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[top=2cm, bottom=1.5cm, left=2cm, right=2cm]{geometry}
+
+%%
+%%% AMS-LaTeX theorem stuff
+%%%
+
+\theoremstyle{plain}
+\newtheorem{proposition}{Proposición}
+
+\begin{document}
+\pagestyle{empty}
+  \begin{center}
+    {\huge\textbf{Primer Certamen\\[0.25\baselineskip]
+		  Algoritmos y Complejidad}}\\
+    \vspace{0.5\baselineskip}
+    {\large 27 de octubre de 2018}
+  \end{center}
+  \vspace{2mm}
+  \begin{center}
+    \pgfimage[width=0.5\textwidth]{internal_monologues}
+    % www.xkcd.org/2057
+  \end{center}
+  \vspace{2.5mm}
+  \begin{enumerate}
+  \item % 20182c1p1
+    Considere la iteración de punto fijo
+    \(x_{n + 1} = f(x_n)\),
+    que converge linealmente a \(x^*\),
+    vale decir hay \(0 < A < 1\) tal que:
+    \begin{equation*}
+      \lim_{n \to \infty} \frac{x_{n + 1} - x^*}{x_n - x^*}
+	= A
+    \end{equation*}
+    \begin{enumerate}
+    \item % 20182c1p1a
+      \label{ques:20182c1p1a}
+      Suponiendo que
+      \((x_{n + 2} - x^*) / (x_{n + 1} - x^*)
+	  \approx (x_{n + 1} - x^*) / (x_n - x^*)\),
+      derive una aproximación \(x^+\) a \(x^*\).
+    \item % 20182c1p1b
+      Explique mediante un algoritmo
+      cómo usar la aproximación de~\ref{ques:20182c1p1a}
+      para acelerar la convergencia.
+    \end{enumerate}
+    \hspace*{\fill}(30 puntos)
+  \item % 20182c1p2
+    El Inspector Legrasse
+    necesita calcular numéricamente integrales del tipo siguiente
+    en forma exacta para \(f\) cúbicas:
+    \begin{equation*}
+      \int_0^1 x f(x) \, \mathrm{d} x
+    \end{equation*}
+    Diga cómo cumplir con el mínimo trabajo
+    (evaluaciones de la complicada función \(f\)),
+    dando las técnicas empleadas y las fórmulas precisas
+    (no es necesario calcular los valores).
+    \\ \hspace*{\fill}(30 puntos)
+  \item % 20182c1p4
+    Considere el problema de las torres de Hanoi,
+    donde queremos mover \(n\) discos de la aguja \(A\) a la \(C\),
+    pero con la restricción que toda movida debe involucrar la aguja \(B\)
+    (por ejemplo,
+     no podemos simplemente mover el disco mayor de \(A\) a \(C\),
+     debemos pasar por \(B\)).
+    \begin{enumerate}
+    \item % 20182c1p4a
+      Plantee una técnica
+      (algoritmo)
+      para resolver esta variante.
+    \item % 2082c1p4b
+      Halle una recurrencia para el número de platos movidos
+      por su algoritmo en términos de \(n\).
+    \end{enumerate}
+    \hspace*{\fill}(35 puntos)
+  \item % 20182c1p5
+    Se da un DAG
+    (grafo dirigido acíclico)
+    \(G = (V, E)\),
+    un vértice origen \(s\)
+    y un vértice destino \(t\).
+    Dé un algoritmo
+    que entregue el número de caminos de \(s\) a \(t\) en \(G\).
+    \\ \hspace*{\fill}(35 puntos)
+  \end{enumerate}
+  \vspace*{\fill}\hspace*{\fill}HvB/\LaTeXe
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

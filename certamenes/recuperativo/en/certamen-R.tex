@@ -1,0 +1,243 @@
+\documentclass[english, spanish, fleqn]{article}
+\usepackage{pgf}
+\usepackage[ruled, noline]{algorithm2e}
+\usepackage{amsmath, amsthm, amssymb, fourier, mathrsfs}
+\usepackage[basic]{complexity}
+\usepackage{enumitem}
+\usepackage{csquotes}
+\usepackage{babel}
+\usepackage[utf8]{inputenc}
+\usepackage[top=2cm, bottom=1.5cm, left=2cm, right=2cm]{geometry}
+
+\newtheorem*{theorem}{Teorema}
+
+%%% Para algorithm2e
+\SetKwProg{Function}{function}{}{}
+\SetKwProg{Procedure}{procedure}{}{}
+
+\DeclareMathOperator{\var}{var}
+\DeclareMathOperator{\Exp}{\mathbb{E}}
+
+\begin{document}
+\pagestyle{empty}
+  \begin{center}
+    {\huge\textbf{Certamen Recuperativo\\[0.25\baselineskip]
+                  Algoritmos y Complejidad}}\\
+    \vspace{0.5\baselineskip}
+    {\large 23 de agosto de 2018}
+  \end{center}
+  \vspace{2mm}
+  \begin{center}
+    \pgfimage[width=0.2\textwidth]{horror_movies}
+    % www.xkcd.org/2056
+  \end{center}
+  \vspace{2.5mm}
+  \begin{enumerate}
+  \item % 20182cRp1
+    Se desea una fórmula de cuadratura
+    para un \(0 < x_0 \le 1\)
+    de la forma:
+    \begin{equation*}
+      \int_{-1}^1 f(x) \, \mathrm{d} x
+	\approx A_{-} f(-x_0) + A_0 f(0) + A_{+} f(x_0)
+    \end{equation*}
+    \begin{enumerate}
+    \item % 20182cRp1a
+      ¿Cuál es el grado máximo de un polinomio para el cual puede ser exacta
+      si \(x_0\) es un valor dado?
+    \item % 20182cRp1b
+      Explique cómo obtener los valores de los coeficientes
+      \(A_{-}, A_0, A_{+}\).
+    \item % 20182cRp1c
+      ¿Cómo obtiene el mejor valor posible de \(x_0\)?
+      ¿Cuál es el grado máximo de un polinomio para el cual es exacta?
+    \end{enumerate}
+    \hspace*{\fill}(25 puntos)
+  \item % 20182cRp2
+    Un \emph{\foreignlanguage{english}{heap}} es un árbol binario
+    en el cual cada elemento es menor que sus hijos.
+    El algoritmo~\ref{alg:SlowHeap}
+    construye uno del rango \(a[i..j]\) de un arreglo;
+    se invoca \(\operatorname{SlowHeap}(0, n - 1)\).
+    \begin{algorithm}
+      \DontPrintSemicolon
+      \Function{\(\operatorname{SlowHeap}(i, j)\)}{
+	\If{\(i = j\)}{
+	  \Return Nodo sin hijos conteniendo \(a[i]\) \;
+	}
+	Busque \(m\) en \(i \le m \le j\) tal que \(a[m]\)
+	  es el mínimo del rango ; \quad
+	Intercambie \(a[m]\) con \(a[j]\) \;
+	\(p_l
+	  \leftarrow \operatorname{SlowHeap}
+		       (i, \lfloor (i + j - 1) / 2 \rfloor)\) ; \quad
+	\(p_r
+	  \leftarrow \operatorname{SlowHeap}
+		       (\lfloor (i + j - 1) / 2 \rfloor + 1, j - 1)\) \;
+	  \Return Nodo conteniendo \(a[j]\)
+	     con hijos \(p_l\) y \(p_r\) \;
+      }
+      \caption{\(\operatorname{SlowHeap}\)}
+      \label{alg:SlowHeap}
+    \end{algorithm}
+    Dé la recurrencia para el tiempo de ejecución
+    y resuélvala.
+    \\ \hspace*{\fill}(30 puntos)
+  \item % 20182cRp3
+    McWidget tiene carteles en varios sitios
+    que muestran el número de \emph{\foreignlanguage{english}{widget}}
+    producidos.
+    George Akeley gasta \(v\) en el viaje para actualizar los carteles
+    y \(d\) por cada dígito que cambia
+    (o sea,
+     cambiar de \(21\) a \(22\) cuesta \(v + d\),
+     \(99\) a \(100\) cuesta \(v + 3 d\)).
+    Halle el costo amortizado por ítem producido.
+    \\ \hspace*{\fill}(30 puntos)
+  \item % 20182cRp4
+    Dan un algoritmo que responde \textquote{Sí} o \textquote{No}.
+    Si responde \textquote{Sí},
+    esto siempre es correcto;
+    si responde \textquote{No}
+    está correcto con probabilidad al menos \(1/n\)
+    si la entrada es de tamaño \(n\).
+    Este algoritmo toma tiempo \(\Theta(n^2)\) para entradas de tamaño \(n\).
+    \begin{enumerate}
+    \item % 20182c2p4a
+      Clasifique este algoritmo y su error.
+    \item % 20182c2p4b
+      ¿Cuántas veces hay que ejecutarlo para garantizar probabilidad
+      al menos \(1 - 1 / \mathrm{e}\) de que la respuesta es correcta?
+    \end{enumerate}
+    \hspace*{\fill}(30 puntos)
+  \end{enumerate}
+  \vspace*{\fill}\hspace*{\fill}HvB/\LaTeXe
+\pagebreak[4]
+\section*{Teorema maestro}
+\label{sec:teorema-maestro}
+
+  Al dividir un problema de tamaño \(n\)
+  en \(a\) problemas de tamaño \(n / b\)
+  que se resuelven recursivamente,
+  si el trabajo de dividir y combinar soluciones es \(f(n) > 0\),
+  el tiempo para resolver un problema de tamaño \(n\) es,
+  para \(\alpha = \log_b a\):
+  \begin{equation*}
+    t(n)
+      = a t(n / b) + f(n)
+    \quad t(1) = t_1
+  \end{equation*}
+  cuya solución es:
+  \begin{equation*}
+    t(n)
+      = \begin{cases}
+          \Theta(n^\alpha)
+             & \text{\(f(n) = O(n^c)\) para \(c < \alpha\)} \\
+          \Theta(n^\alpha)
+             & \text{\(f(n) = \Theta(n^\alpha \log^\beta n)\)
+                     con \(\beta < -1\)} \\
+          \Theta(n^\alpha \log \log n)
+             & \text{\(f(n) = \Theta(n^\alpha \log^\beta n)\)
+                     con \(\beta = -1\)} \\
+          \Theta(n^\alpha \log^{\beta + 1} n)
+             & \text{\(f(n) = \Theta(n^\alpha \log^\beta n)\)
+                     con \(\beta > -1\)} \\
+          \Theta(f(n))
+            & \text{\(f(n) = \Omega(n^c)\) con \(c > \alpha\)
+                    y \(a f(n / b) < k f(n)\) para \(n\) grande
+                    con \(k < 1\)}
+        \end{cases}
+  \end{equation*}
+
+\section*{Algunas series notables}
+\label{sec:series}
+
+  En lo que sigue,
+  \(m, n \in \mathbb{N}\),
+  \(k \in \mathbb{N}_0\)
+  y \(\alpha, \beta \in \mathbb{C}\).
+  \begin{equation*}
+    \frac{1}{1 - a z}
+      = \sum_{n \ge 0} a^n z^n
+	 \qquad \frac{1 - z^{m + 1}}{1 - z}
+	    = \sum_{0 \le n \le m} z^n
+  \end{equation*}
+  \begin{equation*}
+    (1 + z)^\alpha
+      = \sum_{n \ge 0} \binom{\alpha}{n} z^n
+	 \qquad \binom{\alpha}{n}
+	     = \frac{\alpha^{\underline{n}}}{n!}
+	     = \frac{\alpha (\alpha - 1) \dotsm (\alpha - n + 1)}{n!}
+	 \qquad
+    \binom{n}{k}
+	     = \frac{n!}{k! (n - k)!}
+  \end{equation*}
+  \begin{equation*}
+    \binom{1/2}{n}
+      = \frac{(-1)^{n - 1}}{n 2^{2 n - 1}} \, \binom{2 n - 2}{n - 1}
+	    \quad \text{\ (si \(n \ge 1\))}
+      \qquad
+    \binom{-1/2}{n}
+      = \frac{(-1)^n}{2^{2 n}} \, \binom{2 n}{n} \qquad
+    \binom{-n}{k}
+      = (-1)^k \, \binom{n + k - 1}{n - 1}
+  \end{equation*}
+  \begin{equation*}
+    \frac{1}{(1 - z)^{n + 1}}
+      = \sum_{k \ge 0} \binom{n + k}{n} z^k
+      = \frac{1}{n!}
+	   \sum_{k \ge 0} (k + 1) (k + 2) \dotsm (k + n) z^k
+      = \frac{1}{n!} \sum_{k \ge 0} (k + 1)^{\bar{n}} z^k
+  \end{equation*}
+  \begin{equation*}
+    \sum_{n \ge 0} \binom{n}{k} z^n
+      = \frac{z^k}{(1 - z)^{k + 1}}
+  \end{equation*}
+
+\section*{Cotas en probabilidad}
+\label{sec:cotas-probabilidad}
+
+  \begin{theorem}[Markov]
+    Si \(X\) es una variable aleatoria no negativa,
+    y \(c > 0\):
+    \begin{equation*}
+      \Pr[X > c]
+        \le \frac{\Exp[X]}{c}
+    \end{equation*}
+  \end{theorem}
+  \begin{theorem}[Chebyshev]
+    Si \(X\) es una variable aleatoria de media \(\Exp[X] = \mu\)
+    y varianza \(\var[X] = \Exp[(X - \mu)^2] = \sigma^2\),
+    para \(c > 0\):
+    \begin{equation*}
+      \Pr[(X - \mu)^2 > c \sigma]
+        \le \frac{1}{c^2}
+    \end{equation*}
+  \end{theorem}
+  \begin{theorem}[Chernoff]
+    Sean \(X_i\) variables aleatorias,
+    \(0 \le X_i \le 1\) para todo \(i\),
+    definamos \(X = \sum X_i\)
+    y \(\mu = \Exp[X]\).
+    Si \(c > 1\) con \(\beta(u) = u \ln u - u + 1\) se cumplen:
+    \begin{align*}
+      \Pr[X \ge c \mu]
+        &\le \mathrm{e}^{- \beta(c) \mu} \\
+      \Pr[X \le \mu / c]
+        &\le \mathrm{e}^{- \beta(1 / c) \mu} \\
+    \end{align*}
+  \end{theorem}
+
+\section*{Un límite clásico}
+\label{sec:un-limite-clasico}
+
+\begin{equation*}
+  \lim_{n \to \infty} \left( 1 + \frac{x}{n} \right)^n
+    = \mathrm{e}^x
+\end{equation*}
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:

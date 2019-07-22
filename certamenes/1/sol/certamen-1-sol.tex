@@ -1,0 +1,318 @@
+\documentclass[english, spanish, fleqn]{article}
+\usepackage{babel}
+\usepackage[utf8]{inputenc}
+\usepackage{amsmath, amssymb, fourier}
+\usepackage[ruled, noline]{algorithm2e}
+\usepackage{pgf}
+
+%%%
+%%% For algorithm2e
+%%%
+
+\SetAlgorithmName{Algoritmo}{Algoritmo}{Índice de algoritmos}
+
+\SetAlCapSty{mdseries}
+\SetKwProg{Procedure}{procedure}{}{}
+\SetKwProg{Function}{function}{}{}
+
+\begin{document}
+\thispagestyle{empty}
+  \begin{center}
+    {\huge\textbf{Pauta de Corrección\\[0.4\baselineskip]
+		  Primer Certamen\\[0.3\baselineskip]
+		  Algoritmos y Complejidad}}\\
+    \vspace{2ex}
+    {\large 27 de octubre de 2018}
+  \end{center}
+  \vspace{5mm}
+
+  \begin{enumerate}
+  \item % 20182c1p1
+    Ambas partes son independientes.
+    \begin{enumerate}
+    \item % 20182c1p1a
+      Bajo el supuesto indicado,
+      podemos plantear la ecuación para la aproximación \(x^+\):
+      \begin{align*}
+	\frac{x_{n + 2} - x^+}{x_{n + 1} - x^+}
+	  &= \frac{x_{n + 1} - x^+}{x_n - x^+} \\
+	(x_{n + 2} - x^+) (x_n - x^+)
+	  &= (x_{n + 1} - x^+)^2 \\
+	x_{n + 2} x_n - (x_{n + 2} + x_n) x^+ + (x^+)^2
+	  &= x_{n + 1}^2 - 2 x_{n + 1} x^+ + (x^+)^2 \\
+	x_{n + 2} x_n - x_{n + 1}^2
+	  &= (x_{n + 2} - 2 x_{n + 1} + x_n) x^+
+      \end{align*}
+      Despejando:
+      \begin{equation*}
+	x^+
+	  = \frac{x_{n + 2} x_n - x_{n + 1}^2}{x_{n + 2} - 2 x_{n + 1} + x_n}
+      \end{equation*}
+      Esta fórmula es muy inestable numéricamente
+      (el resultado es dividir dos expresiones
+       que restan cantidades muy parecidas),
+      puede escribirse en forma más estable como:
+      \begin{equation*}
+	x^+
+	  = x_n - \frac{(\Delta x_n)^2}{\Delta^2 x_n}
+      \end{equation*}
+      donde:
+      \begin{align*}
+	\Delta x_n
+	  &= x_{n + 1} - x_n \\
+	\Delta^2 x_n
+	  &= \Delta (\Delta x_n) \\
+	  &= \Delta (x_{n + 1} - x_n) \\
+	  &= x_{n + 2} - 2 x_{n + 1} + x_n
+      \end{align*}
+      Por esta fórmula
+      se le conoce como el \emph{proceso \(\Delta^2\) de Aitken},
+      nombrado
+      por Alexander Aitken quien lo introdujo en 1926.
+    \item % 20182c1p1b
+      Sea cual sea el resultado de la primera parte de la pregunta,
+      resulta el algoritmo~\ref{alg:20182c1p1b}
+      para aproximar el punto fijo de \(g(x)\),
+      con el punto de partida \(x_0\),
+      (reemplace la fórmula para \(x^+\)
+       a asignar a \(x_0\)).
+      \begin{algorithm}
+	\DontPrintSemicolon
+
+	\Function{\(\operatorname{Aitken}(g, x_0, \epsilon)\)}{
+	  \Repeat{\(\lvert x_2 - x_0 \rvert \le \epsilon\)}{
+	    \(x_1 \leftarrow g(x_0)\) \;
+	    \(x_2 \leftarrow g(x_1)\) \;
+	    \(x_0 \leftarrow x_0 - (\Delta x_0)^2 /\Delta^2 x_0\) \;
+	  }
+	  \Return \(x_0\) \;
+	}
+	\caption{Algoritmo usando aceleración de Aitken}
+	\label{alg:20182c1p1b}
+      \end{algorithm}
+    \end{enumerate}
+
+    \vspace*{2\baselineskip}
+    \begin{minipage}{1.0\linewidth}
+      {\Large\textbf{Puntajes}}\\[0.5\baselineskip]
+      \begin{tabular}{l@{\;}lrr}
+	\multicolumn{2}{l}{\textbf{Total}}		 &    & 30 \\
+	a) & Derivar la aproximación \(x^+\)		 & 20 &	   \\
+	b) & Algoritmo claro				 & 10 &
+      \end{tabular}
+    \end{minipage}
+\pagebreak[4]
+  \item % 20182p2
+    Buscamos una fórmula gaussiana exacta para polinomios hasta grado~\(3\),
+    por lo que requeriremos \(n = 2\) puntos.
+    La teoría nos indica buscar una secuencia de polinomios ortogonales
+    con función de peso \(w(x) = x\) sobre \([0, 1]\).
+    La fórmula será del tipo:
+    \begin{equation*}
+      \int_0^1 x f(x) \, \mathrm{d} x
+	\approx A_0 f(x_0) + A_1 f(x_1)
+    \end{equation*}
+
+    Usamos el proceso de Gram-Schmidt para construir una base ortogonal,
+    partiendo con los vectores \(1, x, x^2\).
+    El producto interno relevante es:
+    \begin{equation*}
+      \langle f, g \rangle
+	= \int_0^1 w(x) f(x) g(x) \, \mathrm{d} x
+    \end{equation*}
+    \begin{align*}
+      p_0(x)
+	&= 1 \\
+      p_1(x)
+	&= x - \frac{\langle x, p_0(x) \rangle}
+		    {\langle p_0(x), p_0(x) \rangle} p_0(x) \\
+      p_2(x)
+	&= x^2 - \frac{\langle x^2, p_1(x) \rangle}
+		      {\langle p_1(x), p_1(x) \rangle} p_1(x)
+	       - \frac{\langle x^2, p_0(x) \rangle}
+		      {\langle p_0(x), p_0(x) \rangle} p_0(x)
+    \end{align*}
+    Nos interesan los ceros de \(p_2\),
+    llamémosles \(x_0\) y \(x_1\).
+
+    Si llamamos \(\ell_i(x)\) a los polinomios de Lagrange:
+    \begin{equation*}
+      \ell_i(x)
+	= \prod_{\substack{0 \le k \le n \\
+			   k \ne i}}
+	    \frac{x - x_k}{x_i - x_k}
+    \end{equation*}
+    los coeficientes están dados por:
+    \begin{align*}
+      A_i
+	= \int_0^1 x \ell_i(x) \, \mathrm{d} x
+    \end{align*}
+
+    Un amable sistema de álgebra simbólica
+    (Maxima,
+     ver el archivo \texttt{p2.mc} adjunto)
+    entrega:
+    \begin{align*}
+      p_0(x)
+	&= 1 \\
+      p_1(x)
+	&= x - \frac{2}{3} \\
+      p_2(x)
+	&= x^2 - \frac{6}{5} x + \frac{3}{10}
+    \end{align*}
+    Los ceros de \(p_2\) son:
+    \begin{equation*}
+      x_0
+	= \frac{6 - \sqrt{6}}{10}
+      \quad
+      x_1
+	= \frac{6 + \sqrt{6}}{10}
+    \end{equation*}
+    Con esto los coeficientes buscados son:
+    \begin{equation*}
+      A_0
+	= \frac{9 + \sqrt{6}}{36}
+      \quad
+      A_1
+	= \frac{9 - \sqrt{6}}{36}
+    \end{equation*}
+
+    \vspace*{2\baselineskip}
+    \begin{minipage}{1.0\linewidth}
+      {\Large\textbf{Puntajes}}\\[0.5\baselineskip]
+      \begin{tabular}{lrr}
+	\textbf{Total}					     &	  & 30 \\
+	Planteo como integración gaussiana de \(2\) puntos   & 10 &    \\
+	Explicar cómo obtener \(p_2(x)\)		     & 10 &    \\
+	Nodos son los ceros de \(p_2\)			     &	4 &    \\
+	Fórmulas para coeficientes			     &	6 &
+      \end{tabular}
+    \end{minipage}
+\pagebreak[4]
+  \item % 20182c1p3
+    Por turno.
+    \begin{enumerate}
+    \item % 20182c1p3a
+      La idea deberá ser:
+      \begin{itemize}
+      \item
+	Mover los \(n - 1\) platos superiores de \(A\) a \(C\)
+      \item
+	Mover el plato mayor de \(A\) a \(B\)
+      \item
+	Mover los \(n - 1\) platos superiores de \(C\) a \(A\)
+      \item
+	Mover el plato mayor de \(B\) a \(C\)
+      \item
+	Mover los \(n - 1\) platos superiores de \(A\) a \(C\)
+      \end{itemize}
+      Escrito formalmente como algoritmo recursivo
+      resulta similar al del apunte,
+      vea el algoritmo~\ref{alg:20182c1p3}.
+      Se invoca \(\operatorname{Hanoi}(n, A, C)\).
+      \begin{algorithm}[ht]
+	\DontPrintSemicolon
+
+	\Procedure{\(\operatorname{Hanoi}(n,
+			 \mathit{src}, \mathit{dst})\)}{
+	  \If{\(n > 0\)}{
+	    \(\operatorname{Hanoi}(n - 1,
+		  \mathit{src}, \mathit{dst})\) \;
+	    Mover de \(\mathit{src}\) a \(B\) \;
+	    \(\operatorname{Hanoi}(n - 1,
+		  \mathit{dst}, \mathit{src})\) \;
+	    Mover de \(B\) a \(\mathit{dst}\) \;
+	    \(\operatorname{Hanoi}(n - 1,
+		  \mathit{src}, \mathit{dst})\) \;
+	  }
+	}
+	\caption{Solución recursiva a la variante de las torres de Hanoi}
+	\label{alg:20182c1p3}
+      \end{algorithm}
+    \item % 20182c1p3b
+      Llamemos \(H_n\) al número de movidas en esta variante
+      de las torres de Hanoi.
+      Tenemos la recurrencia:
+      \begin{equation*}
+	H_{n + 1}
+	  = 2 + 3 H_n
+	\quad
+	H_0
+	  = 0
+      \end{equation*}
+
+      Definiendo:
+      \begin{equation*}
+	h(z)
+	  = \sum_{n \ge 0} H_n z^n
+      \end{equation*}
+      obtenemos la ecuación:
+      \begin{equation*}
+	\frac{h(z) - H_0}{z}
+	  = 3 h(z) + \frac{2}{1 - z}
+      \end{equation*}
+      Nuestro sistema de álgebra simbólica nos da
+      \(h\) como fracciones parciales
+      (ver el archivo \texttt{p3.mc} adjunto):
+      \begin{equation*}
+	h(z)
+	  = \frac{1}{1 - 3 z} - \frac{1}{1 - z}
+      \end{equation*}
+      de donde leemos:
+      \begin{equation*}
+	H_n
+	  = 3^n - 1
+      \end{equation*}
+    \end{enumerate}
+
+    \vspace*{2\baselineskip}
+    \begin{minipage}{1.0\linewidth}
+      {\Large\textbf{Puntajes}}\\[0.5\baselineskip]
+      \begin{tabular}{l@{\;}lrr}
+	\multicolumn{2}{l}{\textbf{Total}}		 &    & 35\\
+	a) & Estrategia para resolver el problema	 & 20 &	  \\
+	b) & Derivar la recurrencia			 & 15 &
+      \end{tabular}
+    \end{minipage}
+\pagebreak[4]
+  \item % 20182c1p4
+    Este es un caso clásico
+    de aplicación de \emph{\foreignlanguage{english}{backtracking}}.
+    Usaremos la notación estándar de grafos,
+    en particular \(N(v)\) son los vértices vecinos a \(v\).
+    Resulta el algoritmo~\ref{alg:20182c1p4}.
+      \begin{algorithm}[ht]
+	\DontPrintSemicolon
+
+	\Function{\(\operatorname{Paths}(G, s, t)\)}{
+	  \If{\(s = t\)}{
+	    \Return 0 \;
+	  }
+	  \(c \leftarrow 0\) \;
+	  \For{\(v \in N(s)\)}{
+	    \(c \leftarrow c + \operatorname{Paths}(G, v, t)\) \;
+	  }
+	  \Return \(c\) \;
+	}
+	\caption{Contar número de caminos en un DAG}
+	\label{alg:20182c1p4}
+      \end{algorithm}
+
+
+    \vspace*{2\baselineskip}
+    \begin{minipage}{1.0\linewidth}
+      {\Large\textbf{Puntajes}}\\[0.5\baselineskip]
+      \begin{tabular}{l@{\;}lrr}
+	\multicolumn{2}{l}{\textbf{Total}}		     &	  & 35 \\
+	Propuesta de backtracking			     & 10 &    \\
+	Algoritmo detallado				     & 25 &
+      \end{tabular}
+    \end{minipage}
+  \end{enumerate}
+  \vfill\hfill HvB/\LaTeXe
+\end{document}
+
+%%% Local Variables:
+%%% mode: latex
+%%% TeX-master: t
+%%% End:
